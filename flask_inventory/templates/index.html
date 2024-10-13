@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>物品管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <h1>物品管理システム</h1>
+    <a href="{{ url_for('inventory') }}">商品一覧</a>
+    <a href="{{ url_for('create_table') }}">テーブル更新用</a>
+</body>
+</html>

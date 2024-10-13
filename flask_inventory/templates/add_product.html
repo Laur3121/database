@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品追加</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>商品追加</h1>
+    <form method="POST" action="{{ url_for('add_product') }}">
+        <label for="name">商品名:</label>
+        <input type="text" id="name" name="name" required><br>
+    
+        <label for="manufacturer">メーカー名:</label>
+        <input type="text" id="manufacturer" name="manufacturer" required><br>
+    
+        <label for="purchase_date">購入日:</label>
+        <input type="date" id="purchase_date" name="purchase_date" required><br>
+    
+        <label for="item_number">物品管理番号:</label>
+        <input type="text" id="item_number" name="item_number"><br>
+    
+        <label for="description">説明:</label>
+        <textarea id="description" name="description"></textarea><br>
+    
+        <input type="submit" value="追加">
+    </form>
+    
+    <a href="/inventory">商品一覧に戻る</a>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>商品一覧</title>
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <a href="{{ url_for('show_add_product') }}">商品を追加</a>
+    
+    <!-- 検索フォーム -->
+    <form method="GET" action="{{ url_for('inventory') }}">
+        <input type="text" name="search" placeholder="商品名で検索" value="{{ request.args.get('search', '') }}">
+        <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
+        <input type="submit" value="検索">
+    </form>
+
+    <!-- メーカーでソート -->
+    <form method="GET" action="{{ url_for('inventory') }}">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="">ソートしない</option>
+            <option value="manufacturer" {% if request.args.get('sort') == 'manufacturer' %}selected{% endif %}>メーカーでソート</option>
+        </select>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>商品名</th>
+                <th>メーカー</th>
+                <th>購入日</th>
+                <th>物品管理番号</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.manufacturer }}</td>
+                    <td>{{ product.purchase_date }}</td>
+                    <td>{{ product.item_number }}</td>
+                    <td>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">詳細</a>
+                        <a href="{{ url_for('edit_product', product_id=product.id) }}">編集</a>
+                        <a href="{{ url_for('delete_product', product_id=product.id) }}">削除</a>
+                        <a href="{{ url_for('generate_qr', product_id=product.id) }}">QRコード生成</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if not products %}
+        <p>商品が見つかりませんでした。</p>
+    {% endif %}
+</body>
+</html>

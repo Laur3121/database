@@ -1,0 +1,2 @@
+echo "Flask" > requirements.txt
+echo "qrcode[pil]" >> requirements.txt
