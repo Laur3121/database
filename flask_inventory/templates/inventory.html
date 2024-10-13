@@ -16,11 +16,29 @@
 
 </style>
 
+<style>
+/* 商品を追加リンクのスタイル */
+.add-product-btn {
+    font-size: 1.5em; /* フォントサイズを大きく */
+    padding: 30px 50px; /* 内側の余白（ボタンのサイズを大きくする） */
+    background-color: #3498db; /* 背景色を青に */
+    color: white; /* 文字色を白に */
+    border: none; /* 枠線を消す */
+    border-radius: 5px; /* 角を丸く */
+    text-decoration: none; /* リンクの下線を消す */
+    display: inline-block;
+}
 
+/* ボタンにホバーしたときのスタイル */
+.add-product-btn:hover {
+    background-color: #2980b9; /* 濃い青に変更 */
+}
+</style>
+</head>
 <body>
-    <h1>商品一覧</h1>
-    <a href="{{ url_for('show_add_product') }}">商品を追加</a>
-    
+<h1>商品一覧</h1>
+<a href="{{ url_for('show_add_product') }}" class="add-product-btn">商品を追加</a>
+
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
         <input type="text" name="search" placeholder="商品名で検索" value="{{ request.args.get('search', '') }}">
