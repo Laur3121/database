@@ -2,12 +2,41 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>物品管理システム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>物品管理っぽいなにか＿勉強用</title>
+    <style>
+        /* タイトルとリンクを中央揃え */
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* h1のサイズと色を指定 */
+        h1 {
+            font-size: 3em;
+            color: #000000; /* 文字色をダークブルーに変更 */
+            margin-bottom: 20px;
+        }
 
+        /* リンクのサイズと色を指定 */
+        a {
+            font-size: 1.5em;
+            margin: 10px;
+            display: inline-block;
+            text-decoration: none;
+            color: #ffffff; /* リンクの色をブルーに変更 */
+        }
+
+        /* リンクにホバー効果を追加（ホバー時の色を変更） */
+        a:hover {
+            color: #ab1717; /* ホバーしたときに色を濃いブルーに変更 */
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>物品管理システム</h1>
+    <h1>物品管理っぽいなにか</h1>
     <a href="{{ url_for('inventory') }}">商品一覧</a>
     <a href="{{ url_for('create_table') }}">テーブル更新用</a>
 </body>

@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>商品一覧</title>
 </head>
+
+<style>
+    /* タイトルとリンクを中央揃え */
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+</style>
+
+
 <body>
     <h1>商品一覧</h1>
     <a href="{{ url_for('show_add_product') }}">商品を追加</a>
