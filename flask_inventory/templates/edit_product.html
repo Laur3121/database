@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>商品編集</title>
+    <title>在庫編集</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>商品編集</h1>
+    <h1>在庫編集</h1>
     <form method="POST" action="{{ url_for('update_product', product_id=product['id']) }}">
         <label for="name">商品名:</label>
         <input type="text" id="name" name="name" value="{{ product['product_name'] }}" required><br>

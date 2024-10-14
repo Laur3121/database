@@ -2,13 +2,13 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>商品追加</title>
+    <title>在庫追加</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>商品追加</h1>
+    <h1>在庫追加</h1>
     <form method="POST" action="{{ url_for('add_product') }}">
-        <label for="name">商品名:</label>
+        <label for="name">物品名:</label>
         <input type="text" id="name" name="name" required><br>
     
         <label for="manufacturer">メーカー名:</label>

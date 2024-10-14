@@ -2,13 +2,13 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>商品詳細</title>
+    <title>在庫詳細</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
 </head>
 <body>
-    <h1>商品詳細</h1>
-    <p>商品名: {{ product.product_name }}</p>
+    <h1>物品詳細</h1>
+    <p>在庫名: {{ product.product_name }}</p>
     <p>製造企業: {{ product.manufacturer }}</p>
     <p>購入日: {{ product.purchase_date }}</p>
     <p>物品管理番号: {{ product.item_number }}</p>
