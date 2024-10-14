@@ -3,12 +3,14 @@ import sqlite3
 import qrcode
 import io
 import csv
+import os
+import pandas as pd
 
 app = Flask(__name__)
 
 
 # 一意で安全な秘密鍵を設定
-app.config['SECRET_KEY'] = 'your_secret_key_here'
+app.config['SECRET_KEY'] = 'Hirakegoma'
 
 
 # データベース接続
@@ -140,6 +142,9 @@ def product_detail(product_id):
     conn.close()
     return render_template('product_detail.html', product=product)
 
+
+# csvのアップロード
+
 @app.route('/upload_csv', methods=['GET', 'POST'])
 def upload_csv():
     if request.method == 'POST':
@@ -161,11 +166,14 @@ def upload_csv():
         else:
             flash('CSVファイルのみアップロードできます')
             return redirect(request.url)
+        
+    return redirect(url_for('inventory'))
     
+
   
 
 
-
+# CSVのエクスポート
 
 @app.route('/export_csv')
 def export_csv():
