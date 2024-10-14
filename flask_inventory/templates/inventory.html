@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>商品一覧</title>
+    <title>在庫一覧</title>
 </head>
 
 <style>
@@ -36,12 +36,12 @@
 </style>
 </head>
 <body>
-<h1>商品一覧</h1>
-<a href="{{ url_for('show_add_product') }}" class="add-product-btn">商品を追加</a>
+<h1>在庫一覧</h1>
+<a href="{{ url_for('show_add_product') }}" class="add-product-btn">在庫を追加</a>
 
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
-        <input type="text" name="search" placeholder="商品名で検索" value="{{ request.args.get('search', '') }}">
+        <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
         <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
         <input type="submit" value="検索">
     </form>
@@ -52,12 +52,21 @@
             <option value="">ソートしない</option>
             <option value="manufacturer" {% if request.args.get('sort') == 'manufacturer' %}selected{% endif %}>メーカーでソート</option>
         </select>
-    </form>
+    </form> 
+    
+
+
+    <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
+<form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
+    <label for="csv_file">CSVファイルをアップロード:</label>
+    <input type="file" id="csv_file" name="csv_file" accept=".csv">
+    <button type="submit">アップロード</button>
+</form>
 
     <table>
         <thead>
             <tr>
-                <th>商品名</th>
+                <th>在庫名</th>
                 <th>メーカー</th>
                 <th>購入日</th>
                 <th>物品管理番号</th>
@@ -83,7 +92,7 @@
     </table>
     
     {% if not products %}
-        <p>商品が見つかりませんでした。</p>
+        <p>在庫が見つかりませんでした。</p>
     {% endif %}
 </body>
 </html>

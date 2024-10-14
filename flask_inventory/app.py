@@ -1,9 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file
+from flask import Flask, render_template, request, redirect, url_for, send_file,Response,flash 
 import sqlite3
 import qrcode
 import io
+import csv
 
 app = Flask(__name__)
+
+
+# 一意で安全な秘密鍵を設定
+app.config['SECRET_KEY'] = 'your_secret_key_here'
+
 
 # データベース接続
 def get_db_connection():
@@ -133,6 +139,56 @@ def product_detail(product_id):
     product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
     conn.close()
     return render_template('product_detail.html', product=product)
+
+@app.route('/upload_csv', methods=['GET', 'POST'])
+def upload_csv():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('ファイルが選択されていません')
+            return redirect(request.url)
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            flash('ファイルが選択されていません')
+            return redirect(request.url)
+        
+        if file and file.filename.endswith('.csv'):
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash('CSVファイルがアップロードされました')
+            return redirect(url_for('upload_csv'))
+        else:
+            flash('CSVファイルのみアップロードできます')
+            return redirect(request.url)
+    
+  
+
+
+
+
+@app.route('/export_csv')
+def export_csv():
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT * FROM inventory')
+    data = cursor.fetchall()
+
+    output = io.StringIO()
+    csv_writer = csv.writer(output)
+
+    # ヘッダー
+    csv_writer.writerow(['商品名', 'メーカー', '購入日', '物品管理番号', '説明'])
+
+    # データを書き込み
+    for row in data:
+        csv_writer.writerow(row)
+
+    conn.close()
+
+    output.seek(0)
+    return Response(output, mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment;filename=inventory.csv'})
+
 
 # QRコード生成処理
 @app.route('/generate_qr/<int:product_id>')
