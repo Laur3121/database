@@ -9,6 +9,17 @@ import pandas as pd
 app = Flask(__name__)
 
 
+
+
+# アップロードフォルダの設定
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# アップロードフォルダが存在しない場合は作成する
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+
 # 一意で安全な秘密鍵を設定
 app.config['SECRET_KEY'] = 'Hirakegoma'
 
@@ -201,27 +212,33 @@ def export_csv():
 # QRコード生成処理
 @app.route('/generate_qr/<int:product_id>')
 def generate_qr(product_id):
-    conn = get_db_connection()
-    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
-    conn.close()
+    # 商品の詳細ページのURLを生成
+    product_url = url_for('product_detail', product_id=product_id, _external=True)
     
-    if product is None:
-        return "Product not found", 404
-
     # QRコードの生成
-    qr_data = f"Product Name: {product['product_name']}\nManufacturer: {product['manufacturer']}\nPurchase Date: {product['purchase_date']}"
-    qr = qrcode.make(qr_data)
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(product_url)
+    qr.make(fit=True)
 
-    # QRコードをメモリに保存
-    img = io.BytesIO()
-    qr.save(img, format='PNG')
-    img.seek(0)
+    # QRコード画像の生成
+    img = qr.make_image(fill='black', back_color='white')
+    
+    # 画像を一時保存する
+    img_path = os.path.join(app.config['UPLOAD_FOLDER'], f'qr_{product_id}.png')
+    img.save(img_path)
 
-    return send_file(img, mimetype='image/png')
+    # 画像ファイルを返す
+    return send_file(img_path, mimetype='image/png')
 
 # アプリを実行
 if __name__ == '__main__':
-    app.run(debug=True)
+    #公開するために必要なやつうう
+    app.run(host='0.0.0.0', port=8001,debug=True)
 
 
 
