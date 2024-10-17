@@ -13,6 +13,9 @@
     <p>購入日: {{ product.purchase_date }}</p>
     <p>物品管理番号: {{ product.item_number }}</p>
     <p>説明: {{ product.description }}</p>
+
+        <!-- QRコードを表示 -->
+        <img src="{{ url_for('generate_qr', product_id=product.id) }}" alt="QRコード" alt="QRコード" style="width:150px; height:150px;">
     
     <a href="{{ url_for('edit_product', product_id=product['id']) }}">編集</a> <!-- 編集ボタン -->
     <a href="/inventory">戻る</a>
