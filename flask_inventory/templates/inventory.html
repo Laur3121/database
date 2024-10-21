@@ -62,12 +62,13 @@
 
 
     <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
-<form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
+    <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
+<!-- <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
     <label for="csv_file">CSVファイルをアップロード:</label>
     <input type="file" id="csv_file" name="csv_file" accept=".csv">
     <button type="submit">アップロード</button>
 </form>
-
+ -->
     <table>
         <thead>
             <tr>

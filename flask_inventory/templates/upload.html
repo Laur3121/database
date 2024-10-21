@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSVファイルアップロード</title>
+</head>
+<body>
+    <h1>CSVファイルをアップロード</h1>
+    <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="アップロード">
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

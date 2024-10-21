@@ -5,10 +5,10 @@ import io
 import csv
 import os
 import pandas as pd
+import re
+
 
 app = Flask(__name__)
-
-
 
 
 # アップロードフォルダの設定
@@ -18,6 +18,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # アップロードフォルダが存在しない場合は作成する
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+
+def secure_filename(filename):
+    filename = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)  # 不正な文字を置換
+    return filename
 
 
 # 一意で安全な秘密鍵を設定
@@ -159,29 +164,57 @@ def product_detail(product_id):
 @app.route('/upload_csv', methods=['GET', 'POST'])
 def upload_csv():
     if request.method == 'POST':
+        # ファイルが送信されたか確認
         if 'file' not in request.files:
             flash('ファイルが選択されていません')
             return redirect(request.url)
-        
+
         file = request.files['file']
-        
+
+        # ファイル名が空ではないか確認
         if file.filename == '':
             flash('ファイルが選択されていません')
             return redirect(request.url)
-        
+
+        # CSVファイルかどうか確認
         if file and file.filename.endswith('.csv'):
-            filename = file.filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash('CSVファイルがアップロードされました')
+            filename = secure_filename(file.filename)  # 安全なファイル名に変換
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)  # ファイルを保存
+
+            # CSVを読み込み、データベースに挿入
+            try:
+                with open(file_path, newline='', encoding='utf-8') as csvfile:
+                    reader = csv.DictReader(csvfile)
+                    conn = get_db_connection()
+                    for row in reader:
+                        # 必要なカラムのデータを取得して挿入
+                        name = row['商品名']  # CSVヘッダーに基づく
+                        manufacturer = row['メーカー']
+                        purchase_date = row['購入日']
+                        item_number = row['物品管理番号']
+                        description = row['説明']
+
+                        conn.execute(
+                            'INSERT INTO inventory (product_name, manufacturer, purchase_date, item_number, description) VALUES (?, ?, ?, ?, ?)', 
+                            (name, manufacturer, purchase_date, item_number, description)
+                        )
+                    conn.commit()
+                    conn.close()
+
+                flash('CSVファイルからデータが正常にインポートされました')
+            except Exception as e:
+                flash(f'CSVの読み込み中にエラーが発生しました: {str(e)}')
             return redirect(url_for('upload_csv'))
         else:
             flash('CSVファイルのみアップロードできます')
             return redirect(request.url)
-        
-    return redirect(url_for('inventory'))
+
+    return render_template('upload.html')  # アップロードページを表示
     
 
-  
+
+
 
 
 # CSVのエクスポート
@@ -196,7 +229,7 @@ def export_csv():
     csv_writer = csv.writer(output)
 
     # ヘッダー
-    csv_writer.writerow(['商品名', 'メーカー', '購入日', '物品管理番号', '説明'])
+    csv_writer.writerow(['','商品名', 'メーカー', '購入日', '物品管理番号', '説明'])
 
     # データを書き込み
     for row in data:
