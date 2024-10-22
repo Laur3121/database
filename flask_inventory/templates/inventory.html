@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>在庫一覧</title>
 </head>
 
@@ -61,6 +65,8 @@
 <h1>在庫一覧</h1>
 
 <a href="{{ url_for('index') }}" class="back-button">ホームに戻る</a>
+
+
 
 
 <a href="{{ url_for('show_add_product') }}" class="add-product-btn">在庫を追加</a>
@@ -121,5 +127,10 @@
     {% if not products %}
         <p>在庫が見つかりませんでした。</p>
     {% endif %}
+
+<!-- ページトップボタン -->
+<div id="js-pagetop">↑ ページトップへ</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
 </body>
 </html>

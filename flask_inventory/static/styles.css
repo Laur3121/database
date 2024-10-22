@@ -77,3 +77,18 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #218838;
 }
+
+/* styles.css */
+#js-pagetop {
+    position: fixed;
+    bottom: 20px; /* 画面下からの距離 */
+    right: 20px; /* 画面右からの距離 */
+    display: none; /* 初期状態は非表示 */
+    padding: 10px 15px; /* ボタンの内側の余白 */
+    background-color: #3498db; /* 背景色 */
+    color: white; /* 文字色 */
+    border: none; /* 枠線を消す */
+    border-radius: 5px; /* 角を丸くする */
+    cursor: pointer; /* カーソルをポインターに */
+    z-index: 1000; /* 他の要素の上に表示 */
+}
