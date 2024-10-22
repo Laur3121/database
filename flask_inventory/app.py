@@ -46,6 +46,7 @@ def inventory():
     search_query = request.args.get('search')
     item_number = request.args.get('item_number')
     sort = request.args.get('sort')
+    sort_date = request.args.get('sort_date')
 
     query = 'SELECT * FROM inventory WHERE 1=1'
     params = []
@@ -55,15 +56,22 @@ def inventory():
         params.append('%' + search_query + '%')
 
     if item_number:
-        query += ' AND item_number = ?'  # item_numberでフィルタリング
+        query += ' AND item_number = ?'
         params.append(item_number)
 
+    # メーカーでのソート
     if sort == 'manufacturer':
         query += ' ORDER BY manufacturer'
+    # 購入日でのソート
+    elif sort_date == 'purchase_date_asc':
+        query += ' ORDER BY purchase_date ASC'
+    elif sort_date == 'purchase_date_desc':
+        query += ' ORDER BY purchase_date DESC'
 
     products = conn.execute(query, params).fetchall()
     conn.close()
     return render_template('inventory.html', products=products)
+
 
 
 

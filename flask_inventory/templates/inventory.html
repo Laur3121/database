@@ -78,13 +78,25 @@
         <input type="submit" value="検索"style="width: 100px; height: 50px; font-size: 16px; margin-top: 10px;">
     </form>
 
-    <!-- メーカーでソート -->
-    <form method="GET" action="{{ url_for('inventory') }}">
-        <select name="sort" onchange="this.form.submit()">
-            <option value="">ソートしない</option>
-            <option value="manufacturer" {% if request.args.get('sort') == 'manufacturer' %}selected{% endif %}>メーカーでソート</option>
-        </select>
-    </form> 
+
+<!-- メーカーでソート -->
+<form method="GET" action="{{ url_for('inventory') }}">
+    <label for="sort_manufacturer">メーカー:</label>
+    <select id="sort_manufacturer" name="sort" onchange="this.form.submit()">
+        <option value="">ソートしない</option>
+        <option value="manufacturer" {% if request.args.get('sort') == 'manufacturer' %}selected{% endif %}>ローマ字順</option>
+    </select>
+    
+    <!-- 購入日でソート -->
+    <label for="sort_date">購入日:</label>
+    <select id="sort_date" name="sort_date" onchange="this.form.submit()">
+        <option value="">ソートしない</option>
+        <option value="purchase_date_asc" {% if request.args.get('sort_date') == 'purchase_date_asc' %}selected{% endif %}>購入日 昇順</option>
+        <option value="purchase_date_desc" {% if request.args.get('sort_date') == 'purchase_date_desc' %}selected{% endif %}>購入日 降順</option> 
+    </select>
+</form>
+
+
     
 
 
