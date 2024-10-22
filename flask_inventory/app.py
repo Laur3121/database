@@ -46,7 +46,6 @@ def inventory():
     search_query = request.args.get('search')
     item_number = request.args.get('item_number')
     sort = request.args.get('sort')
-    sort_date = request.args.get('sort_date')
 
     query = 'SELECT * FROM inventory WHERE 1=1'
     params = []
@@ -59,13 +58,12 @@ def inventory():
         query += ' AND item_number = ?'
         params.append(item_number)
 
-    # メーカーでのソート
+    # ソート条件に応じてクエリを変更
     if sort == 'manufacturer':
         query += ' ORDER BY manufacturer'
-    # 購入日でのソート
-    elif sort_date == 'purchase_date_asc':
+    elif sort == 'purchase_date_asc':  # 購入日昇順
         query += ' ORDER BY purchase_date ASC'
-    elif sort_date == 'purchase_date_desc':
+    elif sort == 'purchase_date_desc':  # 購入日降順
         query += ' ORDER BY purchase_date DESC'
 
     products = conn.execute(query, params).fetchall()
@@ -107,7 +105,6 @@ def delete_product(product_id):
     conn.close()
     return redirect(url_for('inventory'))
 
-# テーブル更新するやつ
 @app.route('/create_table')
 def create_table():
     conn = get_db_connection()
@@ -130,7 +127,6 @@ def create_table():
     conn.commit()
     conn.close()
     return "テーブルを作成しました。商品を追加できます。"
-
 
 # 商品編集ページを表示
 @app.route('/edit_product/<int:product_id>', methods=['GET'])

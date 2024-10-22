@@ -96,6 +96,16 @@
     </select>
 </form>
 
+<!--      購入日でソート
+    <form method="GET" action="{{ url_for('inventory') }}">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="">ソートしない</option>
+            <option value="purchase_date_asc" {% if request.args.get('sort') == 'purchase_data_asc' %}selected{% endif %}>購入日　昇順</option>
+            <option value="purchase_date_desc" {% if request.args.get('sort') == 'purchase_data_desc' %}selected{% endif %}>購入日　降順</option> 
+        </select>
+    </form> 
+    <a href="{{ url_for('inventory', sort='purchase_date_asc') }}">購入日 昇順</a>
+    <a href="{{ url_for('inventory', sort='purchase_date_desc') }}">購入日 降順</a> -->
 
     
 
