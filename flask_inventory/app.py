@@ -272,6 +272,13 @@ def generate_qr(product_id):
     # 画像ファイルを返す
     return send_file(img_path, mimetype='image/png')
 
+
+@app.route('/qr_reader')
+def qr_reader():
+    return render_template('qr_reader.html') 
+
+
+
 # アプリを実行
 if __name__ == '__main__':
     #公開するために必要なやつうう
