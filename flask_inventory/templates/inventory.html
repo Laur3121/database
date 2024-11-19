@@ -8,60 +8,52 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <title>在庫一覧</title>
 </head>
 
 <style>
-    /* タイトルとリンクを中央揃え */
-    body {
+
+     body {
         text-align: center;
         font-family: Arial, sans-serif;
+    } 
+
+    .add-product-btn {
+        font-size: 1.5em;
+        padding: 30px 50px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
     }
 
-</style>
+    .add-product-btn:hover {
+        background-color: #2980b9;
+    }
 
-<style>
-/* 商品を追加リンクのスタイル */
-.add-product-btn {
-    font-size: 1.5em; /* フォントサイズを大きく */
-    padding: 30px 50px; /* 内側の余白（ボタンのサイズを大きくする） */
-    background-color: #3498db; /* 背景色を青に */
-    color: white; /* 文字色を白に */
-    border: none; /* 枠線を消す */
-    border-radius: 5px; /* 角を丸く */
-    text-decoration: none; /* リンクの下線を消す */
-    display: inline-block;
-}
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 1.2em;
+        text-decoration: none;
+        color: white;
+        background-color: #3498db;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+    }
 
-/* ボタンにホバーしたときのスタイル */
-.add-product-btn:hover {
-    background-color: #2980b9; /* 濃い青に変更 */
-
-}
-/* ホームに戻るボタンのスタイル */
-.back-button {
-    position: absolute; /* 絶対位置指定 */
-    top: 20px; /* 上からの距離 */
-    left: 20px; /* 左からの距離 */
-    font-size: 1.2em; /* フォントサイズを大きく */
-    text-decoration: none; /* 下線を消す */
-    color: white; /* 文字色を白に */
-    background-color: #3498db; /* 背景色を青に */
-    padding: 10px 20px; /* 内側の余白を追加 */
-    border-radius: 5px; /* 角を丸く */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 影を追加 */
-    transition: background-color 0.3s; /* ホバー時の変化をスムーズに */
-}
-
-/* ボタンにホバーしたときのスタイル */
-.back-button:hover {
-    background-color: #2980b9; /* 濃い青に変更 */
-}
-
+    .back-button:hover {
+        background-color: #2980b9;
+    }
 </style>
 </head>
 <body>
+
 <h1>在庫一覧</h1>
 
 <a href="{{ url_for('index') }}" class="back-button">ホームに戻る</a>
@@ -118,19 +110,25 @@
     <button type="submit">アップロード</button>
 </form>
  -->
+
+ <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
     <table>
-        <thead>
+        <head>
             <tr>
+                <th>選択</th> <!-- チェックボックス列 -->
                 <th>在庫名</th>
                 <th>メーカー</th>
                 <th>購入日</th>
                 <th>物品管理番号</th>
                 <th>操作</th>
             </tr>
-        </thead>
-        <tbody>
+        </head>
+        <body>
             {% for product in products %}
                 <tr>
+                    <td>
+                        <input type="checkbox" name="selected_products" value="{{ product.id }}">
+                    </td>
                     <td>{{ product.product_name }}</td>
                     <td>{{ product.manufacturer }}</td>
                     <td>{{ product.purchase_date }}</td>
@@ -143,8 +141,11 @@
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
+        </body>
     </table>
+    
+    <button type="submit">選択した商品のQRコードを生成</button>
+</form>
     
     {% if not products %}
         <p>在庫が見つかりませんでした。</p>
@@ -152,7 +153,8 @@
 
 <!-- ページトップボタン -->
 <div id="js-pagetop">↑ ページトップへ</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script> 
 
-<script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
+
 </body>
 </html>
