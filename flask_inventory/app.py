@@ -1,15 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file,Response,flash 
+from flask import Flask, render_template, request, redirect, url_for, send_file, Response, flash
 import sqlite3
 import qrcode
-import io
 import csv
 import os
-import pandas as pd
 import re
-
+from io import StringIO
+from PIL import Image
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+import io
 
 app = Flask(__name__)
-
 
 # アップロードフォルダの設定
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
@@ -19,15 +20,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-
-def secure_filename(filename):
-    filename = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)  # 不正な文字を置換
-    return filename
-
-
 # 一意で安全な秘密鍵を設定
 app.config['SECRET_KEY'] = 'Hirakegoma'
 
+# ファイル名を安全に変換
+def secure_filename(filename):
+    filename = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)  # 不正な文字を置換
+    return filename
 
 # データベース接続
 def get_db_connection():
@@ -40,6 +39,7 @@ def get_db_connection():
 def index():
     return render_template('index.html')
 
+# 在庫一覧ページ
 @app.route('/inventory')
 def inventory():
     conn = get_db_connection()
@@ -52,7 +52,7 @@ def inventory():
 
     if search_query:
         query += ' AND product_name LIKE ?'
-        params.append('%' + search_query + '%')
+        params.append(f'%{search_query}%')
 
     if item_number:
         query += ' AND item_number = ?'
@@ -69,6 +69,37 @@ def inventory():
     products = conn.execute(query, params).fetchall()
     conn.close()
     return render_template('inventory.html', products=products)
+
+
+
+
+# QRコード生成処理
+@app.route('/generate_qr/<int:product_id>')
+def generate_qr(product_id):
+    conn = get_db_connection()
+    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+    conn.close()
+
+    if not product:
+        flash('商品が見つかりません', 'error')
+        return redirect(url_for('inventory'))
+
+    # QRコード生成
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    product_url = url_for('inventory', _external=True)
+    qr.add_data(product_url)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+
+    # ファイル保存
+    qr_path = os.path.join(app.config['UPLOAD_FOLDER'], f'qr_{product_id}.png')
+    img.save(qr_path)
+    return send_file(qr_path, mimetype='image/png')
 
 
 
@@ -246,31 +277,61 @@ def export_csv():
                     headers={'Content-Disposition': 'attachment;filename=inventory.csv'})
 
 
-# QRコード生成処理
-@app.route('/generate_qr/<int:product_id>')
-def generate_qr(product_id):
-    # 商品の詳細ページのURLを生成
-    product_url = url_for('product_detail', product_id=product_id, _external=True)
-    
-    # QRコードの生成
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(product_url)
-    qr.make(fit=True)
 
-    # QRコード画像の生成
-    img = qr.make_image(fill='black', back_color='white')
+# QRコード画像をPDFに追加する関数
+@app.route('/generate_selected_qrs', methods=['POST'])
+def generate_selected_qrs():
+    # フォームから選択されたプロダクトIDを取得
+    selected_product_ids = request.form.getlist('selected_products')
     
-    # 画像を一時保存する
-    img_path = os.path.join(app.config['UPLOAD_FOLDER'], f'qr_{product_id}.png')
-    img.save(img_path)
+    # uploadsフォルダのパスを指定
+    uploads_folder = 'static/uploads'
+    
+    # 出力するPDFのパス
+    pdf_output_filename = 'output_qr_selected.pdf'
+    pdf_output_path = os.path.join(uploads_folder, pdf_output_filename)
+    
+    # PDFキャンバスを作成
+    pdf_canvas = canvas.Canvas(pdf_output_path)
+    
+    # QRコードを配置するための初期座標
+    x_offset = 100
+    y_offset = 500
+    qr_size = 100
+    
+    # 選択されたプロダクトごとにQRコードを生成
+    for product_id in selected_product_ids:
+        # プロダクトのURLを取得（例えば、URLにproduct_idを含める）
+        product_url = url_for('product_detail', product_id=product_id, _external=True)
+        
+        # QRコード生成
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(product_url)
+        qr.make(fit=True)
+        img = qr.make_image(fill='black', back_color='white')
+        
+        # QRコード画像を保存
+        qr_image_filename = f'qr_{product_id}.png'
+        qr_image_path = os.path.join(uploads_folder, qr_image_filename)
+        img.save(qr_image_path)
+        
+        # QRコード画像をPDFに追加
+        pdf_canvas.drawImage(qr_image_path, x_offset, y_offset, qr_size, qr_size)
+        
+        # 次のQRコードのy座標を調整
+        y_offset -= (qr_size + 20)  # QRコード間隔を20に設定
+    
+    # PDFの保存
+    pdf_canvas.save()
+    
+    # 最後に生成したPDFをユーザーに提供
+    return send_file(pdf_output_path, as_attachment=True, mimetype='application/pdf')
 
-    # 画像ファイルを返す
-    return send_file(img_path, mimetype='image/png')
 
 
 @app.route('/qr_reader')
