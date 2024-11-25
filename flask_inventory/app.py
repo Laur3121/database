@@ -340,10 +340,8 @@ def qr_reader():
 
 
 
-# アプリを実行
-if __name__ == '__main__':
-    #公開するために必要なやつうう
-    app.run(host='0.0.0.0', port=8001,debug=True)
+if __name__ == "__main__":
+    app.run(ssl_context=('cert.pem', 'key.pem'), host='0.0.0.0', port=8001)
 
 
 
