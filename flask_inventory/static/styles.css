@@ -172,22 +172,28 @@ input[type="submit"]:hover {
     color: #3498db;
 }
 
-  .back-button {
+.back-button {
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    color: #333; /* アイコンの色 */
-    font-size: 20px; /* アイコンの大きさ */
-    padding: 10px;
+    color: #555; /* アイコンの色（落ち着いたトーン） */
+    transition: color 0.3s;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.2em;
+    text-decoration: none;
+    padding: 10px 20px;
     border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s;
   }
 
   .back-button:hover {
-    background-color: #f0f0f0; /* ホバー時の背景色 */
+    color: #000; /* ホバー時に少し濃い色に変化 */
   }
 
   .back-button i {
-    margin-right: 8px; /* アイコンとテキストの間隔 */
+    margin-right: 4px; /* アイコンとテキストの最小限の間隔 */
   }
 

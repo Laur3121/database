@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>QRコード</title>
+</head>
+<body>
+    <h1>QRコード</h1>
+
+    <p><strong>QRコードに埋め込まれた情報:</strong></p>
+    <pre>{{ product_info }}</pre>
+
+    <!-- QRコードを表示 -->
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QRコード" style="width:150px; height:150px;">
+</body>
+</html>
+
+

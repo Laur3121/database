@@ -8,6 +8,7 @@ from io import StringIO
 from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+import base64
 import io
 
 app = Flask(__name__)
@@ -73,7 +74,7 @@ def inventory():
 
 
 
-# QRコード生成処理
+""" # QRコード生成処理
 @app.route('/generate_qr/<int:product_id>')
 def generate_qr(product_id):
     conn = get_db_connection()
@@ -100,6 +101,39 @@ def generate_qr(product_id):
     qr_path = os.path.join(app.config['UPLOAD_FOLDER'], f'qr_{product_id}.png')
     img.save(qr_path)
     return send_file(qr_path, mimetype='image/png')
+ """
+@app.route('/generate_qr/<int:product_id>')
+def generate_qr(product_id):
+    conn = get_db_connection()
+    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+    conn.close()
+
+    if product is None:
+        return 'Product not found', 404
+
+    # 商品情報をそのままQRコードに埋め込む
+    product_info = f"商品名: {product['product_name']}\n製造企業: {product['manufacturer']}\n購入日: {product['purchase_date']}\n物品管理番号: {product['item_number']}\n説明: {product['description']}"
+
+    # QRコードを生成
+    qr = qrcode.make(product_info)
+
+    # 画像をメモリに保存
+    img_io = io.BytesIO()
+    qr.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    # base64にエンコード
+    img_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
+
+    # テンプレートに必要なデータを渡す
+    return render_template('qr_code.html', qr_code=img_base64, product_info=product_info)
+
+
+
+
+
+
+
 
 
 
@@ -278,6 +312,8 @@ def export_csv():
 
 
 
+
+
 # QRコード画像をPDFに追加する関数
 @app.route('/generate_selected_qrs', methods=['POST'])
 def generate_selected_qrs():
@@ -337,6 +373,36 @@ def generate_selected_qrs():
 @app.route('/qr_reader')
 def qr_reader():
     return render_template('qr_reader.html') 
+
+@app.route('/get_qr_text/<int:product_id>')
+def get_qr_text(product_id):
+    conn = get_db_connection()
+    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+    conn.close()
+
+    if not product:
+        return jsonify({'error': '商品が見つかりません'}), 404
+
+    # 商品情報をテキストとして返す
+    return jsonify({'product_id': product_id, 'product_name': product['name'], 'description': product['description']})
+
+
+@app.route('/get_multiple_qr_texts', methods=['POST'])
+def get_multiple_qr_texts():
+    product_ids = request.json.get('product_ids', [])  # JSONで商品IDのリストを受け取る
+    if not product_ids:
+        return jsonify({'error': '商品IDが指定されていません'}), 400
+
+    conn = get_db_connection()
+    products = []
+    for product_id in product_ids:
+        product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+        if product:
+            products.append({'product_id': product_id, 'product_name': product['name'], 'description': product['description']})
+    conn.close()
+
+    return jsonify({'products': products})
+
 
 
 
