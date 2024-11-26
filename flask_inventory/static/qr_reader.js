@@ -21,7 +21,7 @@ window.onload = (e) => {
 	});
 
     function startTick() {
-		msg.innerText = "Loading video...";
+		/* msg.innerText = "Loading video..."; */
 		if(video.readyState === video.HAVE_ENOUGH_DATA){
 			canvas.height = video.videoHeight;
 			canvas.width = video.videoWidth;
@@ -108,8 +108,8 @@ window.onload = (e) => {
             .then(response => response.json())
 			   .then(data => {
 				   console.log("帰ってきた", data)
-				   msg += data;
-				   msg += "\n";
+				   msg.innerText +=JSON.stringify(data) ;
+				   msg.innerText += "\n";
                 // document.getElementById('result').innerText = 'サーバーからの返答: ' + JSON.stringify(data);
             })
             .catch(error => console.error('Error:', error));
