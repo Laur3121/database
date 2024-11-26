@@ -11,7 +11,7 @@ from reportlab.lib.pagesizes import A4
 import base64
 import io
 import json
-
+import re
 
 app = Flask(__name__)
 
@@ -341,7 +341,7 @@ def generate_selected_qrs():
     for product_id in selected_product_ids:
         # プロダクトのURLを取得（例えば、URLにproduct_idを含める）
         product_url = url_for('product_detail', product_id=product_id, _external=True)
-        
+        # product_url+=f"&product_id={product_id}"
         # QRコード生成
         qr = qrcode.QRCode(
             version=1,
@@ -381,8 +381,14 @@ def qr_reader():
 def get_data():
     sample_data = request.get_json()
     print(f"聞きたい{sample_data}",flush=True)
-    return jsonify(sample_data)
+    match = re.search(r'product_detail/(\d+)', sample_data)
+    if match:
+        product_id = int(match.group(1))
+        conn = get_db_connection()
+        product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+        return jsonify(product)
 
+    return "なかった"
 
 @app.route('/get_qr_text/<int:product_id>')
 def get_qr_text(product_id):
