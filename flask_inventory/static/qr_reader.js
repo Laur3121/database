@@ -40,7 +40,7 @@ window.onload = (e) => {
                     drawRect(code.location);
                     //  }
                 }
-                msg.innerText =codes
+                // msg.innerText =codes
           
             
 
@@ -96,7 +96,9 @@ window.onload = (e) => {
             })
             .then(response => response.json())
 			   .then(data => {
-				console.log("帰ってきた",data)
+				   console.log("帰ってきた", data)
+				   msg += data;
+				   msg += "\n";
                 // document.getElementById('result').innerText = 'サーバーからの返答: ' + JSON.stringify(data);
             })
             .catch(error => console.error('Error:', error));
