@@ -1,5 +1,6 @@
 // https://zenn.dev/sdkfz181tiger/articles/096dfb74d485db
 
+const codes = [];
 
 window.onload = (e) => {
 
@@ -17,7 +18,6 @@ window.onload = (e) => {
 	});
 
     function startTick() {
-        const codes = [];
 		msg.innerText = "Loading video...";
 		if(video.readyState === video.HAVE_ENOUGH_DATA){
 			canvas.height = video.videoHeight;
@@ -32,7 +32,11 @@ window.onload = (e) => {
                 console.log(code)
                 if (!code) break;
              // if(code){
-             codes.push(code.data)
+			 if (!codes.includes(code.data)) {
+				 codes.push(code.data);
+				 get_data(code.data)
+}
+            //  codes.push(code.data)
                     drawRect(code.location);
                     //  }
                 }
@@ -43,6 +47,13 @@ window.onload = (e) => {
 		}
 		setTimeout(startTick, 10);
 	}
+
+	
+      document.getElementById('resetButton').addEventListener('click', () => {
+            // クリック時に実行する処理
+		  console.log("リセット")
+		   codes = []
+        });
 
 
 
@@ -71,5 +82,23 @@ window.onload = (e) => {
         ctx.fillStyle = "blue";
         // ctx.stroke();
         // ctx.fill();
+	}
+
+
+	function get_data(id) {
+		console.log( JSON.stringify(id),"を問い合わせ")
+		   fetch('/api/get_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(id)
+            })
+            .then(response => response.json())
+			   .then(data => {
+				console.log("帰ってきた",data)
+                // document.getElementById('result').innerText = 'サーバーからの返答: ' + JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
 	}
 }

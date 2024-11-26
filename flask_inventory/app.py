@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, Response, flash
+from flask import Flask, render_template, request, redirect, url_for, send_file, Response, flash,jsonify
 import sqlite3
 import qrcode
 from reportlab.lib.pagesizes import letter
@@ -11,6 +11,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import base64
 import io
+import json
+import re
 
 app = Flask(__name__)
 
@@ -347,7 +349,7 @@ def generate_selected_qrs():
     for idx, product_id in enumerate(selected_product_ids):
         # プロダクトのURLを生成
         product_url = url_for('product_detail', product_id=product_id, _external=True)
-        
+        # product_url+=f"&product_id={product_id}"
         # QRコード生成
         qr = qrcode.QRCode(
             version=1,
@@ -393,6 +395,20 @@ def generate_selected_qrs():
 @app.route('/qr_reader')
 def qr_reader():
     return render_template('qr_reader.html') 
+
+
+@app.route('/api/get_data', methods=['GET','POST'])
+def get_data():
+    sample_data = request.get_json()
+    print(f"聞きたい{sample_data}",flush=True)
+    match = re.search(r'product_detail/(\d+)', sample_data)
+    if match:
+        product_id = int(match.group(1))
+        conn = get_db_connection()
+        product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+        return jsonify(product)
+
+    return "なかった"
 
 @app.route('/get_qr_text/<int:product_id>')
 def get_qr_text(product_id):
