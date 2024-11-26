@@ -401,11 +401,9 @@ def qr_reader():
 def get_data():
     # JSONデータを受け取る
     sample_data = request.get_json()
-    print(f"聞きたい{sample_data=}", flush=True)
     
     # URLからproduct_idを抽出
     match = re.search(r'product_detail/(\d+)', sample_data)
-    print(f"match{match=}", flush=True)
     
     if match:
         product_id = int(match.group(1))
