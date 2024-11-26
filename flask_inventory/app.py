@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file, Response, flash
 import sqlite3
 import qrcode
+from reportlab.lib.pagesizes import letter
 import csv
 import os
 import re
@@ -314,7 +315,6 @@ def export_csv():
 
 
 
-# QRコード画像をPDFに追加する関数
 @app.route('/generate_selected_qrs', methods=['POST'])
 def generate_selected_qrs():
     # フォームから選択されたプロダクトIDを取得
@@ -328,16 +328,24 @@ def generate_selected_qrs():
     pdf_output_path = os.path.join(uploads_folder, pdf_output_filename)
     
     # PDFキャンバスを作成
-    pdf_canvas = canvas.Canvas(pdf_output_path)
+    pdf_canvas = canvas.Canvas(pdf_output_path, pagesize=letter)
     
-    # QRコードを配置するための初期座標
-    x_offset = 100
-    y_offset = 500
+    # QRコードを配置するための座標とサイズ
+    page_width, page_height = letter
+    margin = 50
     qr_size = 100
+    x_offset = margin
+    y_offset = page_height - margin - qr_size
+    x_step = qr_size + 20  # QRコード間隔を20に設定
+    y_step = qr_size + 20
+    
+    # 最大列数と行数を計算
+    max_cols = (page_width - 2 * margin) // x_step
+    max_rows = (page_height - 2 * margin) // y_step
     
     # 選択されたプロダクトごとにQRコードを生成
-    for product_id in selected_product_ids:
-        # プロダクトのURLを取得（例えば、URLにproduct_idを含める）
+    for idx, product_id in enumerate(selected_product_ids):
+        # プロダクトのURLを生成
         product_url = url_for('product_detail', product_id=product_id, _external=True)
         
         # QRコード生成
@@ -359,11 +367,23 @@ def generate_selected_qrs():
         # QRコード画像をPDFに追加
         pdf_canvas.drawImage(qr_image_path, x_offset, y_offset, qr_size, qr_size)
         
-        # 次のQRコードのy座標を調整
-        y_offset -= (qr_size + 20)  # QRコード間隔を20に設定
+        # X座標を調整
+        x_offset += x_step
+        
+        # 折り返し処理
+        if (idx + 1) % max_cols == 0:
+            x_offset = margin
+            y_offset -= y_step
+        
+        # ページ終了処理
+        if (idx + 1) % (max_cols * max_rows) == 0:
+            pdf_canvas.showPage()  # 新しいページを開始
+            x_offset = margin
+            y_offset = page_height - margin - qr_size
     
     # PDFの保存
     pdf_canvas.save()
+
     
     # 最後に生成したPDFをユーザーに提供
     return send_file(pdf_output_path, as_attachment=True, mimetype='application/pdf')
