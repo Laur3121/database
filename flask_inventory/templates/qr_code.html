@@ -7,19 +7,42 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
     
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <meta charset="UTF-8">
     <title>QRコード</title>
 </head>
-<body>
+<!-- <style>
+.center {
+    display: flex;
+    justify-content: center; /* 水平方向の中央寄せ */
+    align-items: center;     /* 垂直方向の中央寄せ */
+    min-height: 100vh;       /* 画面全体を使用 */
+    background-color: #f9f9f9; /* 背景色（任意） */
+    margin: 0;               /* デフォルトの余白をリセット */
+    font-family: Arial, sans-serif; 
+}
+</style> -->
+
+<style>
+    div {text-align: center;}
+</style>
+
+<body >
+    <a href="{{ url_for('inventory') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+      </a>
     <h1>QRコード</h1>
 
-    <p><strong>QRコードに埋め込まれた情報:</strong></p>
+<!--     <p><strong>QRコードに埋め込まれた情報:</strong></p>
     <pre>{{ product_info }}</pre>
-
+ -->
     <!-- QRコードを表示 -->
-    <img src="data:image/png;base64,{{ qr_code }}" alt="QRコード" style="width:150px; height:150px;">
+     <div>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QRコード" style="width:400px; height:400px; "class = "center">
+    </div>
 </body>
 </html>
+
 
 
