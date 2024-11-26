@@ -397,18 +397,41 @@ def qr_reader():
     return render_template('qr_reader.html') 
 
 
-@app.route('/api/get_data', methods=['GET','POST'])
+@app.route('/api/get_data', methods=['GET', 'POST'])
 def get_data():
+    # JSONデータを受け取る
     sample_data = request.get_json()
-    print(f"聞きたい{sample_data}",flush=True)
+    print(f"聞きたい{sample_data=}", flush=True)
+    
+    # URLからproduct_idを抽出
     match = re.search(r'product_detail/(\d+)', sample_data)
+    print(f"match{match=}", flush=True)
+    
     if match:
         product_id = int(match.group(1))
+        print(f"{product_id=}", flush=True)
+        
+        # データベース接続
         conn = get_db_connection()
+        
+        # データを取得
         product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
-        return jsonify(product)
+        conn.close()
+        
+        if product:
+            # Rowオブジェクトを辞書形式に変換
+            product_dict = {key: product[key] for key in product.keys()}
+            print(f"product_dict={product_dict}", flush=True)
+            
+            # JSON形式で返却
+            return jsonify(product_dict)
+        else:
+            print("データが見つかりませんでした", flush=True)
+            return "データが見つかりません", 404
+    
+    # matchがなかった場合
+    return "なかった", 400
 
-    return "なかった"
 
 @app.route('/get_qr_text/<int:product_id>')
 def get_qr_text(product_id):
