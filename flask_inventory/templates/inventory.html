@@ -10,6 +10,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios_new" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=stat_1" />
+    <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>在庫一覧</title>
 </head>
 
@@ -40,26 +43,27 @@
     .back-button:hover {
         background-color: #f9f7f6;
     }
-    .migiue3{
-        width: 150px;
-        height: 150px;
-        position:relative;
-        top: 50px;
-        left:50px;
-    }
+/*     .migiue3 {
+    display: inline-block; 
+    margin-left: auto;    
+    }   */ 
 </style>
 </head>
 <body>
 
-<h1>在庫一覧</h1>
 
+<div style="display: flex; justify-content: flex-end;">
+    <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
+    <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
+    <a href="{{ url_for('show_add_product') }}" >追加</a>   <!-- class="add-product-btn" -->
+</div>
 
 <a href="{{ url_for('index') }}" class="back-button">
     <i class="fas fa-arrow-left"></i>
   </a>
 
+  <h1>在庫一覧</h1>
 
-<a href="{{ url_for('show_add_product') }}" >追加</a>  <!-- class="add-product-btn" -->
 
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
@@ -100,8 +104,8 @@
     
 
 
-    <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
-    <a href="{{ url_for('upload_csv') }}" class="migiue3">CSVをアップロード</a>
+    
+
 
  <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
     <table>
@@ -144,8 +148,16 @@
     {% endif %}
 
 <!-- ページトップボタン -->
-<div id="js-pagetop">↑ ページトップへ</div>
-<script src="{{ url_for('static', filename='script.js') }}"></script> 
+
+<!-- <a href="#top" id="js-pagetop">
+    <span class="material-icons">arrow_upward</span> ページトップへ
+</a> -->
+<ta href="#top" id="js-pagetop"></a>
+<span class="material-symbols-outlined">
+    stat_1
+    </span>
+</ta>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 
 
 </body>

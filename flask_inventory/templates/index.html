@@ -12,6 +12,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Kalnia+Glaze&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap');
 
 
         /* ベーススタイル */
@@ -20,7 +21,7 @@
             padding: 0;
             /* font-family: 'Sixtyfour Convergence', cursive; */
             /* font-family: 'Cherry Bomb One', cursive; */
-            font-family: 'Sacramento', normal;
+            font-family: 'Hachi Maru Pop', sans-serif;
             background: linear-gradient(135deg, #f0f0f0, #c8c8c8); /* 背景にグラデーションを追加 */
             height: 100vh; /* 高さを100%に設定 */
             display: flex;
@@ -59,7 +60,7 @@
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #f3f3f3; /* インクの色 */
+            background-color: #5c90e4; /* インクの色 */
             transform: scaleX(0); /* 初期状態は線が見えない */
             transform-origin: right;
             transition: transform 0.3s ease;
@@ -79,7 +80,7 @@
     </style>
 </head>
 <body>
-    <h1>Buppinnkannrikun DX2</h1>
+    <h1>物品管理くん DX2</h1>
     <a href="{{ url_for('inventory') }}">物品管理画面</a>
     <a href="{{ url_for('qr_reader') }}">QRコードスキャン</a>
     <a href="{{ url_for('create_table') }}">在庫全削除</a>
