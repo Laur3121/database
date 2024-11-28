@@ -420,6 +420,8 @@ def get_data():
             # Rowオブジェクトを辞書形式に変換
             product_dict = {key: product[key] for key in product.keys()}
             print(f"product_dict={product_dict}", flush=True)
+
+        
             
             # JSON形式で返却
             return jsonify(product_dict)

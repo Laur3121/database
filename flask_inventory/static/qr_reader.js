@@ -69,14 +69,14 @@ window.onload = (e) => {
 
 //前QRコードを詠んだ場所を読まないように塗りつぶし
 	function drawRect(location){
-        	ctx.beginPath();
+        ctx.beginPath();
         ctx.moveTo(location.topLeftCorner.x, location.topLeftCorner.y);
         ctx.lineTo(  location.topRightCorner.x,   location.topRightCorner.y);
-          ctx.lineTo(  location.bottomRightCorner.x,   location.bottomRightCorner.y);
+        ctx.lineTo(  location.bottomRightCorner.x,   location.bottomRightCorner.y);
         ctx.lineTo(location.bottomLeftCorner.x, location.bottomLeftCorner.y);
-          ctx.lineTo(location.bottomLeftCorner.x, location.bottomLeftCorner.y);
-  ctx.fillStyle = "red";
-  ctx.fill();
+        ctx.lineTo(location.bottomLeftCorner.x, location.bottomLeftCorner.y);
+  		ctx.fillStyle = "red";
+  		ctx.fill();
         // ctx.stroke();
 		// drawLine(location.topLeftCorner,     location.topRightCorner);
 		// drawLine(location.topRightCorner,    location.bottomRightCorner);
@@ -95,23 +95,51 @@ window.onload = (e) => {
     //     // ctx.fill();
 	// }
 
-//fetchでURLを問い合わせる
-	function get_data(id) {
-		console.log( JSON.stringify(id),"を問い合わせ")
-		   fetch('/api/get_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(id)
-            })
-            .then(response => response.json())
-			   .then(data => {
-				   console.log("帰ってきた", data)
-				   msg.innerText +=JSON.stringify(data) ;
-				   msg.innerText += "\n";
-                // document.getElementById('result').innerText = 'サーバーからの返答: ' + JSON.stringify(data);
-            })
-            .catch(error => console.error('Error:', error));
-	}
+
+// fetchでURLを問い合わせる
+function get_data(id) {
+    console.log(JSON.stringify(id), "を問い合わせ");
+    fetch('/api/get_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(id)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("帰ってきた", data);
+
+        // データを表に追加
+        addRowToTable(data);
+
+        /* // msgにもデバッグ用に追記
+        msg.innerText += JSON.stringify(data, null, 2) + "\n"; */
+    })
+    .catch(error => console.error('Error:', error));
 }
+
+// 表に行を追加する関数(わかんなくなったらhtmlの方見る)
+function addRowToTable(data) {
+    const table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+    
+    // 新しい行を作成用
+    const newRow = table.insertRow();
+
+    // 各セルを作成し、データを埋め込むやつ
+    const cellId = newRow.insertCell(0);
+    const cellProductName = newRow.insertCell(1);
+    const cellManufacturer = newRow.insertCell(2);
+    const cellDescription = newRow.insertCell(3);
+    const cellPurchaseDate = newRow.insertCell(4);
+
+    cellId.textContent = data.id || "N/A"; //ない場合はN/Aになる
+    cellProductName.textContent = data.product_name || "N/A";
+    cellManufacturer.textContent = data.manufacturer || "N/A";
+    cellDescription.textContent = data.description || "N/A";
+    cellPurchaseDate.textContent = data.purchase_date || "N/A";
+}
+
+
+	
+};

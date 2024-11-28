@@ -40,6 +40,13 @@
     .back-button:hover {
         background-color: #f9f7f6;
     }
+    .migiue3{
+        width: 150px;
+        height: 150px;
+        position:relative;
+        top: 50px;
+        left:50px;
+    }
 </style>
 </head>
 <body>
@@ -52,10 +59,7 @@
   </a>
 
 
-
-
-
-<a href="{{ url_for('show_add_product') }}" class="add-product-btn">在庫を追加</a>
+<a href="{{ url_for('show_add_product') }}" >追加</a>  <!-- class="add-product-btn" -->
 
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
@@ -97,13 +101,7 @@
 
 
     <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
-    <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
-<!-- <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
-    <label for="csv_file">CSVファイルをアップロード:</label>
-    <input type="file" id="csv_file" name="csv_file" accept=".csv">
-    <button type="submit">アップロード</button>
-</form>
- -->
+    <a href="{{ url_for('upload_csv') }}" class="migiue3">CSVをアップロード</a>
 
  <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
     <table>
