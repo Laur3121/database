@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios_new" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios_new" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=stat_1" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=stat_1" />
     <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <title>在庫一覧</title>
 </head>
 
 <style>
-
-     body {
+    body {
         text-align: center;
         font-family: Arial, sans-serif;
-    } 
+    }
 
     .add-product-btn {
         font-size: 1.5em;
@@ -43,54 +49,83 @@
     .back-button:hover {
         background-color: #f9f7f6;
     }
-/*     .migiue3 {
+
+
+
+
+    .pc-table {
+        display: block;
+    }
+
+    .mobile-table {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .pc-table {
+            display: none;
+        }
+
+        .mobile-table {
+            display: block;
+        }
+    }
+
+
+
+
+    /*     .migiue3 {
     display: inline-block; 
     margin-left: auto;    
-    }   */ 
+    }   */
 </style>
 </head>
+
 <body>
 
 
-<div style="display: flex; justify-content: flex-end;">
-    <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
-    <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
-    <a href="{{ url_for('show_add_product') }}" >追加</a>   <!-- class="add-product-btn" -->
-</div>
+    <div style="display: flex; justify-content: flex-end;">
+        <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
+        <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
+        <a href="{{ url_for('show_add_product') }}">追加</a> <!-- class="add-product-btn" -->
+    </div>
 
-<a href="{{ url_for('index') }}" class="back-button">
-    <i class="fas fa-arrow-left"></i>
-  </a>
+    <a href="{{ url_for('index') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
 
-  <h1>在庫一覧</h1>
+    <h1>在庫一覧</h1>
 
 
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
         <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
         <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
-        <input type="submit" value="検索"style="width: 100px; height: 50px; font-size: 16px; margin-top: 10px;">
+        <input type="submit" value="検索" style="width: 100px; height: 50px; font-size: 16px; margin-top: 10px;">
     </form>
 
 
-<!-- メーカーでソート -->
-<form method="GET" action="{{ url_for('inventory') }}">
-    <label for="sort_manufacturer">メーカー:</label>
-    <select id="sort_manufacturer" name="sort" onchange="this.form.submit()">
-        <option value="">ソートしない</option>
-        <option value="manufacturer" {% if request.args.get('sort') == 'manufacturer' %}selected{% endif %}>ローマ字順</option>
-    </select>
-    
-    <!-- 購入日でソート -->
-    <label for="sort_date">購入日:</label>
-    <select id="sort_date" name="sort_date" onchange="this.form.submit()">
-        <option value="">ソートしない</option>
-        <option value="purchase_date_asc" {% if request.args.get('sort_date') == 'purchase_date_asc' %}selected{% endif %}>購入日 昇順</option>
-        <option value="purchase_date_desc" {% if request.args.get('sort_date') == 'purchase_date_desc' %}selected{% endif %}>購入日 降順</option> 
-    </select>
-</form>
+    <!-- メーカーでソート -->
+    <form method="GET" action="{{ url_for('inventory') }}">
+        <label for="sort_manufacturer">メーカー:</label>
+        <select id="sort_manufacturer" name="sort" onchange="this.form.submit()">
+            <option value="">ソートしない</option>
+            <option value="manufacturer" {% if request.args.get('sort')=='manufacturer' %}selected{% endif %}>ローマ字順
+            </option>
+        </select>
 
-<!--      購入日でソート
+        <!-- 購入日でソート -->
+        <label for="sort_date">購入日:</label>
+        <select id="sort_date" name="sort_date" onchange="this.form.submit()">
+            <option value="">ソートしない</option>
+            <option value="purchase_date_asc" {% if request.args.get('sort_date')=='purchase_date_asc' %}selected{%
+                endif %}>購入日 昇順</option>
+            <option value="purchase_date_desc" {% if request.args.get('sort_date')=='purchase_date_desc' %}selected{%
+                endif %}>購入日 降順</option>
+        </select>
+    </form>
+
+    <!--      購入日でソート
     <form method="GET" action="{{ url_for('inventory') }}">
         <select name="sort" onchange="this.form.submit()">
             <option value="">ソートしない</option>
@@ -101,64 +136,113 @@
     <a href="{{ url_for('inventory', sort='purchase_date_asc') }}">購入日 昇順</a>
     <a href="{{ url_for('inventory', sort='purchase_date_desc') }}">購入日 降順</a> -->
 
-    
 
 
-    
 
 
- <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
-    <table>
-        <head>
-            <tr>
-                <th>選択</th> <!-- チェックボックス列 -->
-                <th>在庫名</th>
-                <th>メーカー</th>
-                <th>購入日</th>
-                <th>物品管理番号</th>
-                <th>操作</th>
-            </tr>
-        </head>
-        <body>
+
+
+    <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
+
+        <div class="pc-table">
+            <!-- PC用表示 -->
+            <table>
+
+                <head>
+                    <tr>
+                        <th>選択</th> <!-- チェックボックス列 -->
+                        <th>在庫名</th>
+                        <th>メーカー</th>
+                        <th>購入日</th>
+                        <th>物品管理番号</th>
+                        <th>操作</th>
+                    </tr>
+                </head>
+
+                <body>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selected_products" value="{{ product.id }}">
+                        </td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.manufacturer }}</td>
+                        <td>{{ product.purchase_date }}</td>
+                        <td>{{ product.item_number }}</td>
+                        <td>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}">詳細</a>
+                            <a href="{{ url_for('edit_product', product_id=product.id) }}">編集</a>
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}">削除</a>
+                            <a href="{{ url_for('generate_qr', product_id=product.id) }}">QRコード表示</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </body>
+            </table>
+        </div>
+        <!-- スマホ用 -->
+        <div class="mobile-table">
+
             {% for product in products %}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="selected_products" value="{{ product.id }}">
-                    </td>
-                    <td>{{ product.product_name }}</td>
-                    <td>{{ product.manufacturer }}</td>
-                    <td>{{ product.purchase_date }}</td>
-                    <td>{{ product.item_number }}</td>
-                    <td>
-                        <a href="{{ url_for('product_detail', product_id=product.id) }}">詳細</a>
-                        <a href="{{ url_for('edit_product', product_id=product.id) }}">編集</a>
-                        <a href="{{ url_for('delete_product', product_id=product.id) }}">削除</a>
-                        <a href="{{ url_for('generate_qr', product_id=product.id) }}">QRコード表示</a>
-                    </td>
-                </tr>
+            <!-- こっからchatgptでいい感じに -->
+            <div class="container mt-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="selected_products"
+                                    value="{{ product.id }}" id="product{{ product.id }}">
+                                <label class="form-check-label" for="product{{ product.id }}">
+                                    <h5 class="card-title">{{ product.product_name }}</h5>
+                                </label>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
+                                <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
+                                <li class="list-group-item"><strong>購入日:</strong> {{ product.purchase_date }}</li>
+                                <li class="list-group-item"><strong>管理番号:</strong> {{ product.item_number }}</li>
+                            </ul>
+                            <div class="mt-3">
+                                <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                                    class="btn btn-info btn-sm">詳細</a>
+                                <a href="{{ url_for('edit_product', product_id=product.id) }}"
+                                    class="btn btn-warning btn-sm">編集</a>
+                                <a href="{{ url_for('delete_product', product_id=product.id) }}"
+                                    class="btn btn-danger btn-sm">削除</a>
+                                <a href="{{ url_for('generate_qr', product_id=product.id) }}"
+                                    class="btn btn-secondary btn-sm">QRコード表示</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </body>
-    </table>
-    
-    <button type="submit">選択した商品のQRコードを生成</button>
-</form>
-    
+
+
+        </div>
+
+
+
+        <button type="submit">選択した商品のQRコードを生成</button>
+    </form>
+
     {% if not products %}
-        <p>在庫が見つかりませんでした。</p>
+    <p>在庫が見つかりませんでした。</p>
     {% endif %}
 
-<!-- ページトップボタン -->
+    <!-- ページトップボタン -->
 
-<!-- <a href="#top" id="js-pagetop">
+    <!-- <a href="#top" id="js-pagetop">
     <span class="material-icons">arrow_upward</span> ページトップへ
 </a> -->
-<ta href="#top" id="js-pagetop"></a>
-<span class="material-symbols-outlined">
-    stat_1
-    </span>
-</ta>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+    <ta href="#top" id="js-pagetop"></a>
+        <span class="material-symbols-outlined">
+            stat_1
+        </span>
+    </ta>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 
 </body>
+
 </html>
