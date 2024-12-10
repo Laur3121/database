@@ -9,6 +9,7 @@ from io import StringIO
 from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+import io
 import base64
 import json
 
