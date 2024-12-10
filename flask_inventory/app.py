@@ -521,21 +521,21 @@ def delete_custom_field(field_id):
     return redirect(url_for('inventory'))
 
 
-@app.route('/product/<int:product_id>')
-def product_detail(product_id):
-    conn = get_db_connection()
-    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+# @app.route('/product/<int:product_id>')
+# def product_detail(product_id):
+#     conn = get_db_connection()
+#     product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
     
-    # カスタム項目とその値を取得
-    custom_fields = conn.execute('''
-        SELECT cf.field_name, cv.value
-        FROM custom_fields cf
-        JOIN custom_values cv ON cf.id = cv.field_id
-        WHERE cf.inventory_id = ?
-    ''', (product_id,)).fetchall()
+#     # カスタム項目とその値を取得
+#     custom_fields = conn.execute('''
+#         SELECT cf.field_name, cv.value
+#         FROM custom_fields cf
+#         JOIN custom_values cv ON cf.id = cv.field_id
+#         WHERE cf.inventory_id = ?
+#     ''', (product_id,)).fetchall()
     
-    conn.close()
-    return render_template('product_detail.html', product=product, custom_fields=custom_fields)
+#     conn.close()
+#     return render_template('product_detail.html', product=product, custom_fields=custom_fields)
 
 
 
