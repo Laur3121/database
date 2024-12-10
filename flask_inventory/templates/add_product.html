@@ -5,10 +5,36 @@
     <title>在庫追加</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script>
+        // カスタム項目の追加
+        function addCustomField() {
+            const customFields = document.getElementById('custom-fields');
+            const fieldCount = customFields.children.length;
+
+            if (fieldCount >= 5) {
+                alert('カスタム項目は最大2つまでです。');
+                return;
+            }
+
+            const newField = document.createElement('div');
+            newField.innerHTML = `
+                <input type="text" name="custom_field_names[]" placeholder="項目名" required>
+                <input type="text" name="custom_field_values[]" placeholder="値">
+                <button type="button" onclick="removeField(this)">削除</button>
+            `;
+            customFields.appendChild(newField);
+        }
+
+        // カスタム項目の削除
+        function removeField(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </head>
 <body>
     <h1>在庫追加</h1>
     <form method="POST" action="{{ url_for('add_product') }}">
+        <!-- 固定項目 -->
         <label for="name">物品名:</label>
         <input type="text" id="name" name="name" required><br>
     
@@ -17,17 +43,24 @@
     
         <label for="purchase_date">購入日:</label>
         <input type="date" id="purchase_date" name="purchase_date" required><br>
-    
-        <label for="item_number">物品管理番号:</label>
-        <input type="text" id="item_number" name="item_number"><br>
-    
-        <label for="description">説明:</label>
 
-        <textarea id="description" name="description" style="margin-top: 20px;"></textarea><br>
+        <!-- カスタム項目 -->
+        <h3>カスタム項目</h3>
+        <div id="custom-fields">
+            <!-- 初期のカスタム項目 -->
+            <div>
+                <input type="text" name="custom_field_names[]" value="物品管理番号" required>
+                <input type="text" name="custom_field_values[]">
+            </div>
+            <div>
+                <input type="text" name="custom_field_names[]" value="説明" required>
+                <input type="text" name="custom_field_values[]">
+            </div>
+        </div>
+        <button type="button" onclick="addCustomField()">項目を追加</button><br>
     
+        <!-- 送信ボタン -->
         <input type="submit" value="追加" style="width: 100px; height: 50px; font-size: 16px; margin-top: 40px;">
-
-
     </form>
     
     <a href="/inventory">商品一覧に戻る</a>

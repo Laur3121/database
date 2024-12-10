@@ -10,9 +10,7 @@ from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import base64
-import io
 import json
-import re
 
 app = Flask(__name__)
 
@@ -492,6 +490,52 @@ def get_multiple_qr_texts():
     conn.close()
 
     return jsonify({'products': products})
+
+
+@app.route('/add_custom_field/<int:inventory_id>', methods=['POST'])
+def add_custom_field(inventory_id):
+    field_name = request.form['field_name']
+    value = request.form['value']
+    
+    conn = get_db_connection()
+    # 新しいカスタムフィールドを定義
+    cur = conn.execute('INSERT INTO custom_fields (inventory_id, field_name) VALUES (?, ?)', (inventory_id, field_name))
+    field_id = cur.lastrowid
+    
+    # 値を保存
+    conn.execute('INSERT INTO custom_values (field_id, value) VALUES (?, ?)', (field_id, value))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('edit_product', product_id=inventory_id))
+
+
+@app.route('/delete_custom_field/<int:field_id>', methods=['POST'])
+def delete_custom_field(field_id):
+    conn = get_db_connection()
+    # カスタムフィールドとその値を削除
+    conn.execute('DELETE FROM custom_values WHERE field_id = ?', (field_id,))
+    conn.execute('DELETE FROM custom_fields WHERE id = ?', (field_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('inventory'))
+
+
+@app.route('/product/<int:product_id>')
+def product_detail(product_id):
+    conn = get_db_connection()
+    product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+    
+    # カスタム項目とその値を取得
+    custom_fields = conn.execute('''
+        SELECT cf.field_name, cv.value
+        FROM custom_fields cf
+        JOIN custom_values cv ON cf.id = cv.field_id
+        WHERE cf.inventory_id = ?
+    ''', (product_id,)).fetchall()
+    
+    conn.close()
+    return render_template('product_detail.html', product=product, custom_fields=custom_fields)
+
 
 
 
