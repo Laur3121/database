@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ↓西村のcss↓  -->
+    <!-- ↓style.css読み込み↓  -->
     <link rel="stylesheet" href="../static/styles.css" type="text/css">
+    <!-- アイコンライブラリ -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -20,6 +23,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
     <title>在庫一覧</title>
 </head>
 
@@ -32,27 +36,45 @@
 </head>
 
 <body>
+    <div class="position-button-menu">
+        <a href="{{ url_for('export_csv') }}" class="button">
+            <i data-feather="file-text"></i>
+            CSVをエクスポート
+        </a>
 
+        <a href="{{ url_for('upload_csv') }}" class="button">
+            <i data-feather="upload"></i>
+            CSVをアップロード
+        </a>
 
-    <div style="display: flex; justify-content: flex-end;">
-        <a href="{{ url_for('export_csv') }}">CSVをエクスポート</a>
-        <a href="{{ url_for('upload_csv') }}">CSVをアップロード</a>
-        <a href="{{ url_for('show_add_product') }}">追加</a> <!-- class="add-product-btn" -->
+        <a href="{{ url_for('show_add_product') }}" class="button">
+            <i data-feather="plus"></i>
+            追加
+        </a>
     </div>
 
-    <a href="{{ url_for('index') }}" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-
+    <div class="position-button-back">
+        <a href="{{ url_for('index') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+    
     <h1>在庫一覧</h1>
 
     <!-- 検索フォーム -->
-    <form method="GET" action="{{ url_for('inventory') }}">
-        <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
-        <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
-        <input class="button" type="submit" value="検索">
-    </form>
+    <div>
+        <form method="GET" action="{{ url_for('inventory') }}">
+            <div>
+                <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
+                <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
+            </div>
 
+            <div class="button"> 
+                <i data-feather="search"></i>
+                <input type="submit" class="button" value="検索">
+            </div>
+        </form>
+    </div>
 
     <!-- メーカーでソート -->
     <form method="GET" action="{{ url_for('inventory') }}">
@@ -74,29 +96,11 @@
         </select>
     </form>
 
-    <!--      購入日でソート
-    <form method="GET" action="{{ url_for('inventory') }}">
-        <select name="sort" onchange="this.form.submit()">
-            <option value="">ソートしない</option>
-            <option value="purchase_date_asc" {% if request.args.get('sort') == 'purchase_data_asc' %}selected{% endif %}>購入日　昇順</option>
-            <option value="purchase_date_desc" {% if request.args.get('sort') == 'purchase_data_desc' %}selected{% endif %}>購入日　降順</option> 
-        </select>
-    </form> 
-    <a href="{{ url_for('inventory', sort='purchase_date_asc') }}">購入日 昇順</a>
-    <a href="{{ url_for('inventory', sort='purchase_date_desc') }}">購入日 降順</a> -->
-
-
-
-
-
-
-
     <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
 
+        <!-- PC用表示 -->
         <div class="pc-table">
-            <!-- PC用表示 -->
             <table>
-
                 <head>
                     <tr>
                         <th>選択</th> <!-- チェックボックス列 -->
@@ -104,6 +108,7 @@
                         <th>メーカー</th>
                         <th>購入日</th>
                         <th>物品管理番号</th>
+                        <th>部屋</th>
                         <th>操作</th>
                     </tr>
                 </head>
@@ -118,18 +123,33 @@
                         <td>{{ product.manufacturer }}</td>
                         <td>{{ product.purchase_date }}</td>
                         <td>{{ product.item_number }}</td>
+
+                        <td>{{ product.room_id }}{{ product.room_name }}</td>
                         <td>
-                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">詳細</a>
-                            <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">編集</a>
-                            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">削除</a>
-                            <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">QRコード表示</a>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">
+                                <i data-feather="grid"></i>
+                                詳細
+                            </a>
+                            <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">
+                                <i data-feather="edit"></i>
+                                編集
+                            </a>
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">
+                                <i data-feather="trash"></i>
+                                削除
+                            </a>
+                            <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">
+                                <i data-feather="maximize"></i>
+                                QRコード表示
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
                 </body>
             </table>
         </div>
-        <!-- スマホ用 -->
+
+        <!-- スマホ用表示 -->
         <div class="mobile-table">
 
             {% for product in products %}
@@ -145,47 +165,50 @@
                                     <h5 class="card-title">{{ product.product_name }}</h5>
                                 </label>
                             </div>
-
+                            
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
                                 <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
                                 <li class="list-group-item"><strong>購入日:</strong> {{ product.purchase_date }}</li>
                                 <li class="list-group-item"><strong>管理番号:</strong> {{ product.item_number }}</li>
+
                             </ul>
 
                             <div class="mt-3">
-                                <a href="{{ url_for('product_detail', product_id=product.id) }}"
-                                    class="button">詳細</a>
-                                <a href="{{ url_for('edit_product', product_id=product.id) }}"
-                                    class="button">編集</a>
-                                <a href="{{ url_for('delete_product', product_id=product.id) }}"
-                                    class="button">削除</a>
-                                <a href="{{ url_for('generate_qr', product_id=product.id) }}"
-                                    class="button">QRコード表示</a>
+                                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">
+                                    <i data-feather="grid"></i>
+                                    詳細
+                                </a>
+                                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">
+                                    <i data-feather="edit"></i>
+                                    編集
+                                </a>
+                                <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">
+                                    <i data-feather="trash"></i>
+                                    削除
+                                </a>
+                                <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">
+                                    <i data-feather="maximize"></i>
+                                    QRコード表示
+                                </a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
             {% endfor %}
-
-
         </div>
 
-
-
-        <button class="button" type="submit">選択した商品のQRコードを生成</button>
+        <button type="submit" class="button">
+            <i data-feather="cpu"></i>
+            選択した商品のQRコードを生成
+        </button>
     </form>
 
     {% if not products %}
     <p>在庫が見つかりませんでした。</p>
     {% endif %}
 
-    <!-- ページトップボタン -->
-
-    <!-- <a href="#top" id="js-pagetop">
-    <span class="material-icons">arrow_upward</span> ページトップへ
-</a> -->
     <ta href="#top" id="js-pagetop"></a>
         <span class="material-symbols-outlined">
             stat_1
@@ -193,7 +216,10 @@
     </ta>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
 </body>
 
 </html>

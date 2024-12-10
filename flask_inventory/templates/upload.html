@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <!-- ↓style.css読み込み↓  -->
+     <link rel="stylesheet" href="../static/styles.css" type="text/css">
+     <!-- アイコンライブラリ -->
+     <script src="https://unpkg.com/feather-icons"></script>
+
     <title>CSVファイルアップロード</title>
 </head>
+
 <body>
     <h1>CSVファイルをアップロード</h1>
+
+    <div class="position-button-back">
+        <a href="{{ url_for('index') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+
     <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="アップロード">
+        <div style="display: inline-block;">
+            <input type="file"  name="file">
+        </div>
+        
+        <div style="display: inline-block;" class="button">
+            <i data-feather="upload"></i>
+            <input type="submit" class="button" value="アップロード">
+        </div>
+        
     </form>
 
     {% with messages = get_flashed_messages() %}
@@ -21,6 +43,18 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <a href="/inventory">商品一覧に戻る</a>
+    <div class="button">
+        <a href="/inventory">
+            <i data-feather="chevron-left"></i>
+            商品一覧に戻る
+        </a>
+    </div>
+   
+
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
+
 </body>
 </html>
