@@ -30,13 +30,14 @@
         <label for="description">説明:</label>
         <textarea id="description" name="description">{{ product['description'] }}</textarea><br>
 
-
+        選択中:{{product['room_id']}}
 
         <select name="room-select" id="room-select">
             <option value="">選んで</option>
             {% for room in rooms %}
 
-            <option value="{{room['room_id']}}">{{room['room_id']}}-{{room['room_name']}}</option>
+            <option value="{{room['room_id']}}" {{ 'selected' if room['room_id']==product['room_id'] else '' }}>
+                {{room['room_id']}}-{{room['room_name']}}</option>
             {% endfor %}
         </select>
 
