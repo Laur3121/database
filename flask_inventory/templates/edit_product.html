@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <title>在庫編集</title>
@@ -9,28 +10,44 @@
 </head>
 <a href="{{ url_for('inventory') }}" class="back-button">
     <i class="fas fa-arrow-left"></i>
-  </a>
+</a>
+
 <body>
     <h1>在庫編集</h1>
     <form method="POST" action="{{ url_for('update_product', product_id=product['id']) }}">
         <label for="name">商品名:</label>
         <input type="text" id="name" name="name" value="{{ product['product_name'] }}" required><br>
-    
+
         <label for="manufacturer">メーカー名:</label>
         <input type="text" id="manufacturer" name="manufacturer" value="{{ product['manufacturer'] }}" required><br>
-    
+
         <label for="purchase_date">購入日:</label>
         <input type="date" id="purchase_date" name="purchase_date" value="{{ product['purchase_date'] }}" required><br>
-    
+
         <label for="item_number">物品管理番号:</label>
         <input type="text" id="item_number" name="item_number" value="{{ product['item_number'] }}"><br>
-    
+
         <label for="description">説明:</label>
         <textarea id="description" name="description">{{ product['description'] }}</textarea><br>
-    
+
+
+
+        <select name="room-select" id="room-select">
+            <option value="">選んで</option>
+            {% for room in rooms %}
+
+            <option value="{{room['room_id']}}">{{room['room_id']}}-{{room['room_name']}}</option>
+            {% endfor %}
+        </select>
+
+
+
+
+
         <input type="submit" value="更新">
     </form>
-    
+
     <a href="/inventory">戻る</a>
 </body>
+
 </html>

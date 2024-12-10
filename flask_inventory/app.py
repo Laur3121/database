@@ -51,8 +51,13 @@ def inventory():
     item_number = request.args.get('item_number')
     sort = request.args.get('sort')
 
-    query = 'SELECT * FROM inventory WHERE 1=1'
+    query = 'SELECT * FROM inventory'
+
+# https://zenn.dev/naoki_mochizuki/articles/60603b2cdc273cd51c59 武田追加
+    query += ' JOIN room ON inventory.room_id = room.room_id'
+
     params = []
+    query += ' WHERE 1=1'
 
     if search_query:
         query += ' AND product_name LIKE ?'
@@ -70,6 +75,8 @@ def inventory():
     elif sort == 'purchase_date_desc':  # 購入日降順
         query += ' ORDER BY purchase_date DESC'
 
+
+    print(f"{query=}",flush=True)
     products = conn.execute(query, params).fetchall()
     conn.close()
     return render_template('inventory.html', products=products)
@@ -180,6 +187,7 @@ def create_table():
     # まず、テーブルが存在すれば削除する
     conn.execute('DROP TABLE IF EXISTS inventory;')
     
+    
     # 次に、テーブルを作成する
     conn.execute('''
         CREATE TABLE inventory (
@@ -188,9 +196,24 @@ def create_table():
             manufacturer TEXT NOT NULL,
             purchase_date TEXT NOT NULL,
             item_number TEXT,  -- 物品管理番号
-            description TEXT   -- 説明
+            description TEXT,   -- 説明
+            room_id INT --部屋ID
         )
     ''')
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Laptop', 'Dell', '2024-12-01', 'IT-001', 'Office laptop', 1)")
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Chair', 'Ikea', '2023-06-15', 'FUR-023', 'Ergonomic office chair', 2)")
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Refrigerator', 'Samsung', '2022-03-10', 'KIT-456', 'Double-door fridge', 3)")
+
+
+    conn.execute('DROP TABLE IF EXISTS room;')
+    conn.execute('''
+        CREATE TABLE room (
+            room_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            room_name TEXT NOT NULL
+        )
+    ''')
+    conn.execute("INSERT INTO room (room_name) VALUES ('部屋A')")
+    conn.execute("INSERT INTO room (room_name) VALUES ('部屋B')")
     
     conn.commit()
     conn.close()
@@ -201,8 +224,10 @@ def create_table():
 def edit_product(product_id):
     conn = get_db_connection()
     product = conn.execute('SELECT * FROM inventory WHERE id = ?', (product_id,)).fetchone()
+    rooms = conn.execute('SELECT * FROM room').fetchall()
     conn.close()
-    return render_template('edit_product.html', product=product)
+    
+    return render_template('edit_product.html', product=product,rooms=rooms)
 
 # 商品更新処理
 @app.route('/update_product/<int:product_id>', methods=['POST'])
@@ -212,10 +237,16 @@ def update_product(product_id):
     purchase_date = request.form['purchase_date']
     item_number = request.form['item_number']  # 物品管理番号を取得
     description = request.form['description']  # 説明を取得
-
+    room_id = request.form['room-select']
+    print(f"{room_id=}")
     conn = get_db_connection()
-    conn.execute('UPDATE inventory SET product_name = ?, manufacturer = ?, purchase_date = ?, item_number = ?, description = ? WHERE id = ?',
-                 (name, manufacturer, purchase_date, item_number, description, product_id))
+    conn.execute('UPDATE inventory SET product_name = ?, manufacturer = ?, purchase_date = ?, item_number = ?, description = ?,room_id = ? WHERE id = ?',
+                 (name, manufacturer, purchase_date, item_number, description,room_id, product_id))
+
+
+    for row in conn.execute('SELECT * FROM inventory').fetchall():
+        print(dict(row),flush=True)
+
     conn.commit()
     conn.close()
     
