@@ -18,6 +18,18 @@ body {
 }
 
 .button {
+border-radius: 16px; /* 角の丸みの半径を10pxに設定 */
+    color : #000;
+    background-color: #eee; /* ボタンの背景色 */
+    text-decoration: none;
+    padding: 8px 16px; /* ボタン内の余白 */
+    text-align: center; /* 文字の配置 */
+    display: inline-block; /* インラインブロック要素として表示 */
+    font-size: 16px;
+    border: none;
+}
+
+.button-add {
     font-size: 1.5em;
     padding: 30px 50px;
     background-color: #3498db;
@@ -28,7 +40,7 @@ body {
     display: inline-block;
 }
 
-.button:hover {
+.button-add:hover {
     background-color: #2980b9;
 }
 

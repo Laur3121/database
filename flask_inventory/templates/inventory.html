@@ -50,7 +50,7 @@
     <form method="GET" action="{{ url_for('inventory') }}">
         <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
         <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
-        <input type="submit" value="検索" style="width: 100px; height: 50px; font-size: 16px; margin-top: 10px;">
+        <input class="button" type="submit" value="検索">
     </form>
 
 
@@ -119,10 +119,10 @@
                         <td>{{ product.purchase_date }}</td>
                         <td>{{ product.item_number }}</td>
                         <td>
-                            <a href="{{ url_for('product_detail', product_id=product.id) }}">詳細</a>
-                            <a href="{{ url_for('edit_product', product_id=product.id) }}">編集</a>
-                            <a href="{{ url_for('delete_product', product_id=product.id) }}">削除</a>
-                            <a href="{{ url_for('generate_qr', product_id=product.id) }}">QRコード表示</a>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">詳細</a>
+                            <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">編集</a>
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">削除</a>
+                            <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">QRコード表示</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -145,7 +145,7 @@
                                     <h5 class="card-title">{{ product.product_name }}</h5>
                                 </label>
                             </div>
-                            
+
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
                                 <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
@@ -174,7 +174,7 @@
 
 
 
-        <button type="submit">選択した商品のQRコードを生成</button>
+        <button class="button" type="submit">選択した商品のQRコードを生成</button>
     </form>
 
     {% if not products %}
