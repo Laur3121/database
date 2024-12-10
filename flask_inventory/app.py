@@ -196,12 +196,12 @@ def create_table():
             purchase_date TEXT NOT NULL,
             item_number TEXT,  -- 物品管理番号
             description TEXT,   -- 説明
-            room_id INT --部屋ID
+            room_id INT NOT NULL DEFAULT 0 --部屋ID
         )
     ''')
-    conn.execute("INSERT INTO inventory VALUES (NULL, 'Laptop', 'Dell', '2024-12-01', 'IT-001', 'Office laptop', 1)")
-    conn.execute("INSERT INTO inventory VALUES (NULL, 'Chair', 'Ikea', '2023-06-15', 'FUR-023', 'Ergonomic office chair', 2)")
-    conn.execute("INSERT INTO inventory VALUES (NULL, 'Refrigerator', 'Samsung', '2022-03-10', 'KIT-456', 'Double-door fridge', 3)")
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Laptop', 'Dell', '2024-12-01', 'IT-001', 'Office laptop', 0)")
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Chair', 'Ikea', '2023-06-15', 'FUR-023', 'Ergonomic office chair', 0)")
+    conn.execute("INSERT INTO inventory VALUES (NULL, 'Refrigerator', 'Samsung', '2022-03-10', 'KIT-456', 'Double-door fridge', 0)")
 
 
     conn.execute('DROP TABLE IF EXISTS room;')
@@ -211,6 +211,7 @@ def create_table():
             room_name TEXT NOT NULL
         )
     ''')
+    conn.execute("INSERT INTO room (room_id,room_name) VALUES (0,'不明')")
     conn.execute("INSERT INTO room (room_name) VALUES ('部屋A')")
     conn.execute("INSERT INTO room (room_name) VALUES ('部屋B')")
     
