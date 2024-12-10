@@ -151,23 +151,38 @@ def generate_qr(product_id):
 # 商品追加ページを表示
 @app.route('/add_product', methods=['GET'])
 def show_add_product():
-    return render_template('add_product.html')
 
-@app.route('/add_product', methods=['POST'])
-def add_product():
-    name = request.form['name']
-    manufacturer = request.form['manufacturer']
-    purchase_date = request.form['purchase_date']
-    item_number = request.form['item_number']  # 物品管理番号を取得
-    description = request.form['description']  # 説明を取得
-
+    name = ""
+    manufacturer = ""
+    purchase_date = ""
+    item_number = ""
+    description = ""
+    room_id= ""
     conn = get_db_connection()
-    conn.execute('INSERT INTO inventory (product_name, manufacturer, purchase_date, item_number, description) VALUES (?, ?, ?, ?, ?)', 
-                 (name, manufacturer, purchase_date, item_number, description))
+    cursor =conn.execute('INSERT INTO inventory (product_name, manufacturer, purchase_date, item_number, description,room_id) VALUES (?, ?, ?, ?, ?,?)', 
+                 (name, manufacturer, purchase_date, item_number, description,room_id))
+    lastrowid= cursor.lastrowid
     conn.commit()
     conn.close()
+    return redirect(url_for('edit_product',product_id=lastrowid))
+    # return render_template('add_product.html')
+
+# updateに統一(武田)
+# @app.route('/add_product', methods=['POST'])
+# def add_product():
+#     name = request.form['name']
+#     manufacturer = request.form['manufacturer']
+#     purchase_date = request.form['purchase_date']
+#     item_number = request.form['item_number']  # 物品管理番号を取得
+#     description = request.form['description']  # 説明を取得
+
+#     conn = get_db_connection()
+#     conn.execute('INSERT INTO inventory (product_name, manufacturer, purchase_date, item_number, description) VALUES (?, ?, ?, ?, ?)', 
+#                  (name, manufacturer, purchase_date, item_number, description))
+#     conn.commit()
+#     conn.close()
     
-    return redirect(url_for('inventory'))
+#     return redirect(url_for('inventory'))
 
 
 # 商品削除処理

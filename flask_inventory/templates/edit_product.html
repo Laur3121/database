@@ -33,7 +33,7 @@
         選択中:{{product['room_id']}}
 
         <select name="room-select" id="room-select">
-            <option value="">選んで</option>
+            <!-- <option value="">選んで</option> -->
             {% for room in rooms %}
 
             <option value="{{room['room_id']}}" {{ 'selected' if room['room_id']==product['room_id'] else '' }}>
