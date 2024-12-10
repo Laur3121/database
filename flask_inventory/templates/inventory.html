@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- ↓西村のcss↓  -->
+    <link rel="stylesheet" href="../static/styles.css" type="text/css">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- JavaScriptファイルをリンク -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet"
@@ -28,56 +28,6 @@
         text-align: center;
         font-family: Arial, sans-serif;
     }
-
-    .add-product-btn {
-        font-size: 1.5em;
-        padding: 30px 50px;
-        background-color: #3498db;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .add-product-btn:hover {
-        background-color: #2980b9;
-    }
-
-
-
-    .back-button:hover {
-        background-color: #f9f7f6;
-    }
-
-
-
-
-    .pc-table {
-        display: block;
-    }
-
-    .mobile-table {
-        display: none;
-    }
-
-    @media (max-width: 768px) {
-        .pc-table {
-            display: none;
-        }
-
-        .mobile-table {
-            display: block;
-        }
-    }
-
-
-
-
-    /*     .migiue3 {
-    display: inline-block; 
-    margin-left: auto;    
-    }   */
 </style>
 </head>
 
@@ -95,7 +45,6 @@
     </a>
 
     <h1>在庫一覧</h1>
-
 
     <!-- 検索フォーム -->
     <form method="GET" action="{{ url_for('inventory') }}">
@@ -199,6 +148,7 @@
                                     <h5 class="card-title">{{ product.product_name }}</h5>
                                 </label>
                             </div>
+                            
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
                                 <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
@@ -206,15 +156,16 @@
                                 <li class="list-group-item"><strong>管理番号:</strong> {{ product.item_number }}</li>
 
                             </ul>
+
                             <div class="mt-3">
                                 <a href="{{ url_for('product_detail', product_id=product.id) }}"
-                                    class="btn btn-info btn-sm">詳細</a>
+                                    class="button">詳細</a>
                                 <a href="{{ url_for('edit_product', product_id=product.id) }}"
-                                    class="btn btn-warning btn-sm">編集</a>
+                                    class="button">編集</a>
                                 <a href="{{ url_for('delete_product', product_id=product.id) }}"
-                                    class="btn btn-danger btn-sm">削除</a>
+                                    class="button">削除</a>
                                 <a href="{{ url_for('generate_qr', product_id=product.id) }}"
-                                    class="btn btn-secondary btn-sm">QRコード表示</a>
+                                    class="button">QRコード表示</a>
                             </div>
                         </form>
                     </div>
