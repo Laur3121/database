@@ -2,66 +2,53 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>在庫詳細</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+     <!-- ↓style.css読み込み↓  -->
+     <link rel="stylesheet" href="../static/styles.css" type="text/css">
+     <!-- アイコンライブラリ -->
+     <script src="https://unpkg.com/feather-icons"></script>
+
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
+    <title>在庫詳細</title>
 </head>
+
 <style>
-.center-content {
-    display: flex;
-    justify-content: center; /* 水平方向の中央寄せ */
-    align-items: center;     /* 垂直方向の中央寄せ */
-    min-height: 100vh;       /* 画面全体を使用 */
-    background-color: #f9f9f9; /* 背景色（任意） */
-    margin: 0;               /* デフォルトの余白をリセット */
-    font-family: Arial, sans-serif; /* フォントを設定（任意） */
+.product-details-container {
+    font-size: large;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column;
 }
-
-.content-box {
-    text-align: left;        /* テキストは左揃え */
-    width: 300px;            /* 任意の幅に設定（調整可能） */
-}
-
-.content-box h1 {
-    margin-bottom: 20px;     /* タイトルの下に余白を設定 */
-}
-
-.content-box p {
-    margin: 10px 0;          /* 各段落の上下に余白を設定 */
-}
-
-.content-box a {
-    display: inline-block;   /* リンクをボタン風に表示 */
-    margin: 5px 10px;        /* ボタン間の余白を設定 */
-    text-decoration: none;   /* 下線を削除 */
-    color: #007BFF;          /* リンクの色（任意） */
-    font-weight: bold;       /* リンクの強調表示 */
-}
-
-.content-box a:hover {
-    text-decoration: underline; /* ホバー時の装飾 */
-}
-
-
 </style>
+
 <body>
-    <a href="{{ url_for('inventory') }}" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-      </a>
-</body>
-<body class="center-content">
-    <div class="content-box">
+      <div class="position-button-back">
+        <a href="{{ url_for('inventory') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+
+    <div class="product-details-container">
         <h1>物品詳細</h1>
         <p>在庫名: {{ product.product_name }}</p>
         <p>製造企業: {{ product.manufacturer }}</p>
         <p>購入日: {{ product.purchase_date }}</p>
         <p>物品管理番号: {{ product.item_number }}</p>
         <p>説明: {{ product.description }}</p>
-        <a href="{{ url_for('edit_product', product_id=product['id']) }}">編集</a>
-        <a href="/inventory">戻る</a>
+        <a href="{{ url_for('edit_product', product_id=product['id']) }}" class="button">
+            <i data-feather="edit"></i>
+            編集
+        </a>
     </div>
+
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
+
 </body>
 
 </html>
