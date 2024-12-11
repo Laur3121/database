@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
-    <title>在庫追加</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+     <!-- ↓style.css読み込み↓  -->
+     <link rel="stylesheet" href="../static/styles.css" type="text/css">
+     <!-- アイコンライブラリ -->
+     <script src="https://unpkg.com/feather-icons"></script>
+
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <title>在庫追加</title>
 </head>
+
 <body>
     <h1>在庫追加</h1>
+
+    <div class="position-button-back">
+        <a href="/inventory" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+
+
     <form method="POST" action="{{ url_for('add_product') }}">
         <label for="name">物品名:</label>
         <input type="text" id="name" name="name" required><br>
@@ -26,10 +41,12 @@
         <textarea id="description" name="description" style="margin-top: 20px;"></textarea><br>
     
         <input type="submit" value="追加" style="width: 100px; height: 50px; font-size: 16px; margin-top: 40px;">
-
-
     </form>
-    
-    <a href="/inventory">商品一覧に戻る</a>
+
+
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
 </body>
 </html>

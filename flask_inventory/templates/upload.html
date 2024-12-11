@@ -16,22 +16,25 @@
 <body>
     <h1>CSVファイルをアップロード</h1>
 
-    <div class="position-button-back">
-        <a href="{{ url_for('index') }}" class="button">
-            <i data-feather="arrow-left"></i>
-        </a>
+    <div class="form-container">
+        <div class="position-button-back">
+            <a href="/inventory" class="button">
+                <i data-feather="arrow-left"></i>
+            </a>
+        </div>
+    
+        <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
+            <div style="display: inline-block;">
+                <input type="file"  name="file">
+            </div>
+            
+            <div style="display: inline-block;" class="button">
+                <i data-feather="upload"></i>
+                <input type="submit" class="button" value="アップロード">
+            </div>
     </div>
 
-    <form action="{{ url_for('upload_csv') }}" method="POST" enctype="multipart/form-data">
-        <div style="display: inline-block;">
-            <input type="file"  name="file">
-        </div>
-        
-        <div style="display: inline-block;" class="button">
-            <i data-feather="upload"></i>
-            <input type="submit" class="button" value="アップロード">
-        </div>
-        
+    
     </form>
 
     {% with messages = get_flashed_messages() %}
@@ -43,14 +46,7 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <div class="button">
-        <a href="/inventory">
-            <i data-feather="chevron-left"></i>
-            商品一覧に戻る
-        </a>
-    </div>
-   
-
+  
     <!-- アイコン表示用 -->
     <script>
         feather.replace();

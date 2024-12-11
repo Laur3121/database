@@ -12,6 +12,14 @@ body {
     padding: 20px;  /* 内側に余白 */
 }
 
+.form-container {
+    font-size: large;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: row;
+}
+
 .button {
     border-radius: 16px; /* 角の丸みの半径を10pxに設定 */
     color : #000;
