@@ -1,5 +1,14 @@
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-<script src="{{ url_for('static', filename='qr_reader.js') }}"></script>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="{{ url_for('static', filename='qr_reader.js') }}"></script>
+    <!-- ↓style.css読み込み↓  -->
+    <link rel="stylesheet" href="../static/styles.css" type="text/css">
+    <!-- アイコンライブラリ -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <title>QRコードリーダー</title>
+</head>
+
 <style>
     table{
   width: 100%;
@@ -19,31 +28,46 @@ table tr:nth-child(odd){
 th{
     background-color: rgb(184, 236, 236);
 }
-h1{
-    text-align: center;
-}
 .centers{
     text-align: center;
 }
 </style>
+
 <html>
-<h1>QRコードリーダー</h1>
-<canvas id="canvas" class="centers"></canvas>
-<button id="resetButton">リセット</button>
-<table id="data-table" >  <!--  border="1" これで線入れれる -->
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>商品名</th>
-            <th>製造元</th>
-            <th>説明</th>
-            <th>購入日</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- データがここに追加される -->
-    </tbody>
-</table>
+<body>
+    <h1>QRコードリーダー</h1>
+
+    <div class="position-button-back">
+        <a href="{{ url_for('index') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+
+    <div>
+        <canvas id="canvas" class="centers"></canvas>
+        <button id="resetButton">リセット</button>
+        <table id="data-table" >  <!--  border="1" これで線入れれる -->
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>商品名</th>
+                    <th>製造元</th>
+                    <th>説明</th>
+                    <th>購入日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- データがここに追加される -->
+            </tbody>
+        </table>
+    </div>
+
+        <!-- アイコン表示用 -->
+        <script>
+            feather.replace();
+        </script>
+</body>
+
 
 
 </html>
