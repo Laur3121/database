@@ -15,24 +15,31 @@
 </head>
 
 <style>
-.product-details-container {
-    font-size: large;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    flex-direction: column;
-}
+    .product-detail-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        font-size: large;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        flex-direction: column;
+    }
 </style>
 
 <body>
-      <div class="position-button-back">
+    <div class="position-button-back">
         <a href="{{ url_for('inventory') }}" class="button">
             <i data-feather="arrow-left"></i>
         </a>
     </div>
 
-    <div class="product-details-container">
-        <h1>物品詳細</h1>
+    <h1>物品詳細</h1>
+
+    <div class="product-detail-container">
         <p>在庫名: {{ product.product_name }}</p>
         <p>製造企業: {{ product.manufacturer }}</p>
         <p>購入日: {{ product.purchase_date }}</p>

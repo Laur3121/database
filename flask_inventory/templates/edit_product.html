@@ -4,17 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>在庫編集</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+   <!-- ↓style.css読み込み↓  -->
+   <link rel="stylesheet" href="../static/styles.css" type="text/css">
+   <!-- アイコンライブラリ -->
+   <script src="https://unpkg.com/feather-icons"></script>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<a href="{{ url_for('inventory') }}" class="back-button">
-    <i class="fas fa-arrow-left"></i>
-</a>
+
+<style>
+</style>
 
 <body>
+    <div class="position-button-back">
+        <a href="{{ url_for('inventory') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
+
     <h1>在庫編集</h1>
-    <form method="POST" action="{{ url_for('update_product', product_id=product['id']) }}">
+
+    <form method="POST" class="form-container" style="flex-direction: column;" action="{{ url_for('update_product', product_id=product['id']) }}">
         <label for="name">商品名:</label>
         <input type="text" id="name" name="name" value="{{ product['product_name'] }}" required><br>
 
@@ -41,14 +51,13 @@
             {% endfor %}
         </select>
 
-
-
-
-
         <input type="submit" value="更新">
     </form>
 
-    <a href="/inventory">戻る</a>
+     <!-- アイコン表示用 -->
+     <script>
+        feather.replace();
+    </script>
 </body>
 
 </html>

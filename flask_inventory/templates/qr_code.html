@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    
-        <meta charset="UTF-8">
-        <title>在庫詳細</title>
-        <link rel="stylesheet" href="../static/styles.css" type="text/css">
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
-    
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+    <meta charset="UTF-8">
+    <!-- ↓style.css読み込み↓  -->
+    <link rel="stylesheet" href="../static/styles.css" type="text/css">
+    <!-- アイコンライブラリ -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>QRコード</title>
 </head>
@@ -17,19 +18,26 @@
     div {text-align: center;}
 </style>
 
-<body >
-    <a href="{{ url_for('inventory') }}" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-      </a>
+<body>
     <h1>QRコード</h1>
+
+    <div class="position-button-back">
+        <a href="{{ url_for('inventory') }}" class="button">
+            <i data-feather="arrow-left"></i>
+        </a>
+    </div>
 
 <!--     <p><strong>QRコードに埋め込まれた情報:</strong></p>
     <pre>{{ product_info }}</pre>
  -->
     <!-- QRコードを表示 -->
-     <div>
-    <img src="data:image/png;base64,{{ qr_code }}" alt="QRコード" style="width:400px; height:400px; "class = "center">
+    <div>
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QRコード" style="width:400px; height:400px; "class = "center">
     </div>
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
 </body>
 </html>
 
