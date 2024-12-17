@@ -365,6 +365,7 @@ def export_csv():
 
 @app.route('/generate_selected_qrs', methods=['POST'])
 def generate_selected_qrs():
+    print("generate_selected_qrs",flush=True)
     # フォームから選択されたプロダクトIDを取得
     selected_product_ids = request.form.getlist('selected_products')
     

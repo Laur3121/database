@@ -58,7 +58,7 @@
             <i data-feather="arrow-left"></i>
         </a>
     </div>
-    
+
     <h1>在庫一覧</h1>
 
     <!-- 検索フォーム -->
@@ -66,10 +66,11 @@
         <form method="GET" action="{{ url_for('inventory') }}">
             <div>
                 <input type="text" name="search" placeholder="在庫名で検索" value="{{ request.args.get('search', '') }}">
-                <input type="text" name="item_number" placeholder="物品管理番号で検索" value="{{ request.args.get('item_number', '') }}">
+                <input type="text" name="item_number" placeholder="物品管理番号で検索"
+                    value="{{ request.args.get('item_number', '') }}">
             </div>
 
-            <div class="button"> 
+            <div class="button">
                 <i data-feather="search"></i>
                 <input type="submit" class="button" value="検索">
             </div>
@@ -98,9 +99,105 @@
 
     <form method="POST" action="{{ url_for('generate_selected_qrs') }}">
 
-        <!-- PC用表示 -->
+
+        <div id="item-table"></div>
+
+
+
+
+        <div>
+            <button type="submit" class="button">
+                <i data-feather="cpu"></i>
+                選択した商品のQRコードを生成
+            </button>
+        </div>
+    </form>
+
+    {% if not products %}
+    <p>在庫が見つかりませんでした。</p>
+    {% endif %}
+
+    <ta href="#top" id="js-pagetop"></a>
+        <span class="material-symbols-outlined">
+            stat_1
+        </span>
+    </ta>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- アイコン表示用 -->
+    <script>
+        feather.replace();
+    </script>
+</body>
+
+</html>
+
+
+
+<script>
+
+
+
+
+    function toggleElementBasedOnWidth() {
+        const screenWidth = window.innerWidth; // 画面幅を取得
+        const targetElement = document.querySelector('.target-element'); // 対象の要素を選択
+
+        if (screenWidth < 768) { // 条件: 幅が768px未満
+            document.getElementById('item-table').innerHTML = `   <!-- スマホ用表示 -->
+        <div class="mobile-table">
+
+            {% for product in products %}
+            <!-- こっからchatgptでいい感じに -->
+            <div class="container mt-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="selected_products"
+                                    value="{{ product.id }}" id="product{{ product.id }}">
+                                <label class="form-check-label" for="product{{ product.id }}">
+                                    <h5 class="card-title">{{ product.product_name }}</h5>
+                                </label>
+                            </div>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
+                                <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
+                                <li class="list-group-item"><strong>購入日:</strong> {{ product.purchase_date }}</li>
+                                <li class="list-group-item"><strong>管理番号:</strong> {{ product.item_number }}</li>
+
+                            </ul>
+
+                            <div class="mt-3">
+                                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">
+                                    <i data-feather="grid"></i>
+                                    詳細
+                                </a>
+                                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">
+                                    <i data-feather="edit"></i>
+                                    編集
+                                </a>
+                                <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">
+                                    <i data-feather="trash"></i>
+                                    削除
+                                </a>
+                                <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">
+                                    <i data-feather="maximize"></i>
+                                    QRコード表示
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>`
+        } else {
+            document.getElementById('item-table').innerHTML = `  <!-- PC用表示 -->
         <div class="pc-table">
             <table>
+
                 <head>
                     <tr>
                         <th>選択</th> <!-- チェックボックス列 -->
@@ -147,80 +244,18 @@
                     {% endfor %}
                 </body>
             </table>
-        </div>
+        </div>`
+        }
+    }
 
-        <!-- スマホ用表示 -->
-        <div class="mobile-table">
+    // 初期実行
+    toggleElementBasedOnWidth();
 
-            {% for product in products %}
-            <!-- こっからchatgptでいい感じに -->
-            <div class="container mt-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <form>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="selected_products"
-                                    value="{{ product.id }}" id="product{{ product.id }}">
-                                <label class="form-check-label" for="product{{ product.id }}">
-                                    <h5 class="card-title">{{ product.product_name }}</h5>
-                                </label>
-                            </div>
-                            
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>在庫名:</strong> {{ product.product_name }}</li>
-                                <li class="list-group-item"><strong>メーカー:</strong> {{ product.manufacturer }}</li>
-                                <li class="list-group-item"><strong>購入日:</strong> {{ product.purchase_date }}</li>
-                                <li class="list-group-item"><strong>管理番号:</strong> {{ product.item_number }}</li>
+    // 画面サイズ変更時に再判定
+    window.addEventListener('resize', toggleElementBasedOnWidth);
 
-                            </ul>
 
-                            <div class="mt-3">
-                                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button">
-                                    <i data-feather="grid"></i>
-                                    詳細
-                                </a>
-                                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="button">
-                                    <i data-feather="edit"></i>
-                                    編集
-                                </a>
-                                <a href="{{ url_for('delete_product', product_id=product.id) }}" class="button">
-                                    <i data-feather="trash"></i>
-                                    削除
-                                </a>
-                                <a href="{{ url_for('generate_qr', product_id=product.id) }}" class="button">
-                                    <i data-feather="maximize"></i>
-                                    QRコード表示
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
 
-        <div>
-            <button type="submit" class="button">
-                <i data-feather="cpu"></i>
-                選択した商品のQRコードを生成
-            </button>
-        </div>
-    </form>
 
-    {% if not products %}
-    <p>在庫が見つかりませんでした。</p>
-    {% endif %}
 
-    <ta href="#top" id="js-pagetop"></a>
-        <span class="material-symbols-outlined">
-            stat_1
-        </span>
-    </ta>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-
-    <!-- アイコン表示用 -->
-    <script>
-        feather.replace();
-    </script>
-</body>
-</html>
+</script>
