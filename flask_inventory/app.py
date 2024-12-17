@@ -120,11 +120,11 @@ def generate_qr(product_id):
     if product is None:
         return 'Product not found', 404
 
-    # 商品情報をそのままQRコードに埋め込む
-    product_info = f"商品名: {product['product_name']}\n製造企業: {product['manufacturer']}\n購入日: {product['purchase_date']}\n物品管理番号: {product['item_number']}\n説明: {product['description']}"
+    # QRコードに埋め込むリンクを生成
+    edit_url = url_for('product_detail', product_id=product_id, _external=True)
 
     # QRコードを生成
-    qr = qrcode.make(product_info)
+    qr = qrcode.make(edit_url)
 
     # 画像をメモリに保存
     img_io = io.BytesIO()
@@ -135,7 +135,7 @@ def generate_qr(product_id):
     img_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
 
     # テンプレートに必要なデータを渡す
-    return render_template('qr_code.html', qr_code=img_base64, product_info=product_info)
+    return render_template('qr_code.html', qr_code=img_base64, edit_url=edit_url)
 
 
 
