@@ -1,1 +1,5 @@
-Flask qrcode pillow chardet reportlab
+Flask
+qrcode
+pillow 
+chardet
+reportlab
