@@ -62,8 +62,11 @@ window.onload = (e) => {
       document.getElementById('resetButton').addEventListener('click', () => {
          
 		  console.log("リセット")
-		  codes = []
+		 codes.length = 0; 
 		   msg ="";
+           const table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+
+table.innerHTML = '';
         });
 
 
